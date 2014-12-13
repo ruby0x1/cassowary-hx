@@ -23,16 +23,18 @@ class AbstractVariable {
     @:noCompletion
     public var _ff: Bool = false;
 
-    public function new( args:VariableArgs ) {
+    public function new( ?args:VariableArgs ) {
         //name defaults to a hash id then,
         //and in subclasses is prefixed before calling super
         //:todo: using luxe hash instead of isolate
-        name += Luxe.utils.uniquehash();
+        name += Luxe.utils.uniqueid();
 
-        if(args.name != null)   name = args.name;
-        if(args.prefix != null) prefix = args.prefix;
-        if(args.value != null)  value = args.value;
-        if(args._ff != null)  _ff = args._ff;
+        if(args != null) {
+            if(args.name != null)   name = args.name;
+            if(args.prefix != null) prefix = args.prefix;
+            if(args.value != null)  value = args.value;
+            if(args._ff != null)  _ff = args._ff;
+        }
     }
 
     function toString() return '$prefix[$name:$value]';

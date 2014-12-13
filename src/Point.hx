@@ -13,6 +13,10 @@ class Point {
         function get_yv() { return y.value; }
 
     public function new(?_x:Variable, ?_y:Variable, ?suffix:String='') {
+
+        if(_x == null) { _x = new Variable({}); }
+        if(_y == null) { _y = new Variable({}); }
+
         x = _x;
         y = _y;
 
