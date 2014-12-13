@@ -16,13 +16,13 @@ class Strength {
         if(!has_symbolic && !has_3_weights) throw "Strength: All 3 weights are required if using weights";
 
         if(has_symbolic) {
-            s = s;
+            symbolic_weight = s;
         } else {
-            s = new SymbolicWeight([w1, w2, w3]);
+            symbolic_weight = new SymbolicWeight([w1, w2, w3]);
         }
     }
 
-    function get_required() {
+    function get_is_required() {
         return this == Strength.required;
     }
 

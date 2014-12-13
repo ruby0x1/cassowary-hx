@@ -14,6 +14,6 @@ class SymbolicWeight {
         }
     }
 
-    function toString return '$value';
+    function toString() return '$value';
 
 } //SymbolicWeight
