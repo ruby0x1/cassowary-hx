@@ -13,13 +13,16 @@ class Tableau  {
 
         // the collection of basic variables that have infeasible rows
         // (used when reoptimizing)
-    var infeasible_rows : Array<AbstractVariable>;
+    @:noCompletion
+    public var infeasible_rows : Array<AbstractVariable>;
         // the set of rows where the basic variable is external this was added to
         // the C++ version to reduce time in setExternalVariables()
-    var external_rows : Array<AbstractVariable>;
+    @:noCompletion
+    public var external_rows : Array<AbstractVariable>;
         // the set of external variables which are parametric this was added to the
         // C++ version to reduce time in setExternalVariables()
-    var external_parametric_vars : Array<AbstractVariable>;
+    @:noCompletion
+    public var external_parametric_vars : Array<AbstractVariable>;
 
     public function new() {
         columns = new Map();
