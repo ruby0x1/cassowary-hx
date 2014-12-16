@@ -1,11 +1,14 @@
 
+import Variable;
+
 typedef EditInfoArgs = {
-    var cn:Constraint;
+    var constraint:Constraint;
     var edit_plus:SlackVariable;
     var edit_minus:SlackVariable;
     var prev_edit:Float;
     var index:Int;
 }
+
 class EditInfo {
 
     var constraint:Constraint;
@@ -29,5 +32,4 @@ class EditInfo {
            ", pec=" + prev_edit +
            ", index=" + index
         + ">";
-  }
 }

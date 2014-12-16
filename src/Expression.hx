@@ -184,6 +184,25 @@ class Expression {
         return true;
     }
 
+    function toString() {
+        var bstr = '';
+        var needsplus = false;
+        if(C.approx(constant,0) || is_constant) {
+            bstr += constant;
+            if(is_constant) {
+                return bstr;
+            } else {
+                needsplus = true;
+            }
+        }
+        each(function(clv,coeff){
+            if(needsplus) bstr += ' + ';
+            bstr += coeff + '*' + clv;
+            needsplus = true;
+        });
+        return bstr;
+    }
+
     public function equals(other:Expression) {
         if(this == other) return true;
         return (other.constant == constant && terms_equals(other.terms));

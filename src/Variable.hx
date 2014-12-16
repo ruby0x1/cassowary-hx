@@ -17,6 +17,7 @@ class AbstractVariable {
     public var prefix : String = '';
     public var name : String;
     public var value : Float = 0;
+    public var hashcode : Int;
 
     var tag: String;
 
@@ -27,7 +28,8 @@ class AbstractVariable {
         //name defaults to a hash id then,
         //and in subclasses is prefixed before calling super
         //:todo: using luxe hash instead of isolate
-        name += Luxe.utils.uniqueid();
+        hashcode = C.inc();
+        name += hashcode;
 
         if(args != null) {
             if(args.name != null)   name = args.name;
@@ -88,6 +90,18 @@ class DummyVariable extends AbstractVariable {
     }
 
 } //DummyVariable
+
+class ObjectiveVariable extends AbstractVariable {
+
+    public function new( args:VariableArgs ) {
+        name = 'o';
+
+        super( args );
+
+        tag = 'obj';
+    }
+
+} //ObjectiveVariable
 
 class SlackVariable extends AbstractVariable {
 

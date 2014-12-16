@@ -32,8 +32,6 @@ class Strength_test extends mohxa.Mohxa {
                 });
             });
 
-        }); //Strength
-
             // it('is sane', function () {
             //     var s = new c.SimplexSolver();
 
@@ -62,6 +60,10 @@ class Strength_test extends mohxa.Mohxa {
             //     assert.isTrue(c.approx(y.value, 20.0));
             //     assert.isTrue(c.approx(z.value, 20.0));
             // });
+
+        }); //Strength
+
+
 
             // describe('multiple stays/edits', function () {
             //     var s = new c.SimplexSolver();

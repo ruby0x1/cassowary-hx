@@ -11,7 +11,7 @@ abstract Op(Int) from Int to Int {
 
 class AbstractConstraint {
 
-    public var hashcode:String;
+    public var hashcode:Int;
     public var strength:Strength;
     public var weight:Float;
     public var expression:Expression;
@@ -27,7 +27,7 @@ class AbstractConstraint {
 
     public function new(?_strength:Strength, _weight:Float=1.0) {
 
-        hashcode = Luxe.utils.uniqueid();
+        hashcode = C.inc();
         weight = _weight;
         strength = Strength.required;
         if(_strength != null) {
@@ -253,6 +253,8 @@ class Equation extends Constraint {
 
             super(a1, a3, a4);
             expression.add_expr(a2, -1);
+        } else {
+            throw "Bad initializer to Equation";
         }
 
     } //new
