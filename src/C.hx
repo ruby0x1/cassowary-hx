@@ -2,8 +2,8 @@
 
 class C {
 
-    public static var logging = true;
-    public static var verbose = true;
+    public static var logging = false;
+    public static var verbose = false;
 
     public static function fnenter(v:Dynamic) {
         if(logging) {
@@ -39,6 +39,7 @@ class C {
 
     static var count = 1;
     public static function inc() {
+        // Sys.println('count=$count');
         return count++;
     }
 

@@ -25,13 +25,17 @@ class Tableau  {
         columns = new Map();
         rows = new Map();
 
-        infeasible_rows = [];
-        external_rows = [];
-        external_parametric_vars = [];
+            //the inc is called because in the js code
+            //it incremented with each hashset, but we don't need that
+            //so we just increment them here to get parity on the test
+            //numbers for debugging purposes while porting
+        infeasible_rows = [];               C.inc();
+        external_rows = [];                 C.inc();
+        external_parametric_vars = [];      C.inc();
     }
 
     public function note_removed( v:AbstractVariable, subject:AbstractVariable ) {
-        C.fnenter("note_removed: " + v + ' / ' + subject);
+        C.log("noteRemovedVariable: " + v + ' / ' + subject);
         var col = columns.get(v);
         if(col != null) {
             col.remove(subject);
@@ -39,7 +43,7 @@ class Tableau  {
     }
 
     public function note_added( v:AbstractVariable, subject:AbstractVariable ) {
-        C.fnenter("note_added: " + v + ' / ' + subject);
+        C.log("noteAddedVariable: " + v + ' ' + subject);
         if(subject != null) {
             insert_column_var(v, subject);
         }
@@ -53,7 +57,7 @@ class Tableau  {
 
         var rowset = columns.get(param_var);
         if(rowset == null) {
-            rowset = [];
+            rowset = []; C.inc(); //see constructor for inc reasoning
             columns.set(param_var, rowset);
         }
 
@@ -62,8 +66,7 @@ class Tableau  {
 
     function add_row(aVar:AbstractVariable, expr:Expression) {
 
-        var val = aVar.vvalue == '' ? Std.string(aVar.value) : aVar.vvalue;
-        C.fnenter("addRow: " + val + ", " + expr);
+        C.fnenter("addRow: " + (aVar.val) + ", " + expr);
 
         rows.set(aVar, expr);
 
@@ -84,7 +87,7 @@ class Tableau  {
 
     function remove_column(aVar: AbstractVariable) {
 
-        C.fnenter("remove_column:" + aVar);
+        C.fnenter("removeColumn:" + aVar);
 
         var _rows = this.columns.get(aVar);
         if(_rows != null) {
@@ -110,7 +113,7 @@ class Tableau  {
 
     function remove_row( aVar:AbstractVariable ) {
 
-        C.fnenter("remove_row:" + aVar);
+        C.fnenter("removeRow:" + aVar);
 
         var expr = rows.get(aVar);
         if(expr == null) throw "null expression";
@@ -118,7 +121,7 @@ class Tableau  {
         expr.each(function(clv, coeff) {
             var varset = columns.get(clv);
             if (varset != null) {
-                C.log("Tableau.remove_row removing from varset: " + aVar);
+                C.log("removing from varset: " + aVar);
                 varset.remove(aVar);
             }
         });
@@ -130,7 +133,7 @@ class Tableau  {
 
         rows.remove(aVar);
 
-        C.log("Tableau.remove_row returning " + expr);
+        C.fnexit("returning " + expr);
 
         return expr;
 
@@ -138,7 +141,7 @@ class Tableau  {
 
     function substitute_out( oldvar:AbstractVariable, expr:Expression ) {
 
-        C.fnenter("substitute_out: " + oldvar + ", " + expr);
+        C.fnenter("substituteOut: " + oldvar + ", " + expr);
         C.log(this);
 
         var varset = columns.get(oldvar);

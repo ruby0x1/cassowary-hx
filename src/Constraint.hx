@@ -36,7 +36,11 @@ class AbstractConstraint {
 
     } //new
 
-    function toString() return '$tag:$strength {$weight} ($expression)';
+    function toString() {
+        var s = '';
+        if(tag != '') s += '$tag:';
+        return '$s$strength {$weight} ($expression)';
+    }
 
 } //AbstractConstraint
 

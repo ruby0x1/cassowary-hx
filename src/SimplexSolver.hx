@@ -67,7 +67,7 @@ class SimplexSolver extends Tableau {
 
 
     public function add_constraint(cn:AbstractConstraint) {
-        C.fnenter('add_constraint ' + cn);
+        C.fnenter('addConstraint: ' + cn);
             //output into these
         var _eplus_eminus = [];
         var _prev_edit_const = [];
@@ -92,7 +92,7 @@ class SimplexSolver extends Tableau {
     } //add_constraint
 
     public function add_edit_var(v:Variable, ?_strength:Strength, ?_weight:Float=1.0) {
-        C.fnenter("add_edit_var: " + v + " @ " + _strength + " {" + _weight + "}");
+        C.fnenter("addEditVar: " + v + " @ " + _strength + " {" + _weight + "}");
 
         if(_strength == null) _strength = Strength.strong;
         return add_constraint(new EditConstraint(v, _strength, _weight));
@@ -141,7 +141,7 @@ class SimplexSolver extends Tableau {
     } //remove_edit_vars_to
 
     public function add_point_stays(points:Array<{x:Float,y:Float}>) {
-        C.fnenter('add_point_stays ' + Std.string(points));
+        C.fnenter('addPointStays: ' + Std.string(points));
 
         var idx = 0;
         for(p in points) {
@@ -159,7 +159,7 @@ class SimplexSolver extends Tableau {
     } //add_stay
 
     public function remove_constraint(cn:AbstractConstraint) {
-        C.fnenter('remove_constraint_internal ' + cn);
+        C.fnenter('removeConstraintInternal: ' + cn);
         C.log(this);
 
         needs_solving = true;
@@ -288,7 +288,7 @@ class SimplexSolver extends Tableau {
     } //remove_constraint
 
     public function resolve_array(new_edit_constants:Array<Float>) {
-        C.fnenter('resolve_array ' + new_edit_constants);
+        C.fnenter('resolveArray' + new_edit_constants);
         var l = new_edit_constants.length;
         for(v in edit_var_map.keys()) {
             var cei = edit_var_map.get(v);
@@ -315,7 +315,7 @@ class SimplexSolver extends Tableau {
     } //resolve
 
     public function suggest_value(v:AbstractVariable, x:Float) {
-        C.fnenter('suggest_value: ($v , $x)');
+        C.fnenter('suggestValue: ($v , $x)');
         var cei = edit_var_map.get(v);
         if(cei == null) {
             throw "suggestValue for variable " + v + ", but var is not an edit variable";
@@ -389,25 +389,25 @@ class SimplexSolver extends Tableau {
 
     override function toString() {
         var bstr = super.get_internal_info();
-            bstr += "\nstay_plus_error_vars: ";
+            bstr += "\n_stayPlusErrorVars: ";
             bstr += Std.string(stay_plus_error_vars);
-            bstr += "\nstay_minus_error_vars: ";
+            bstr += "\n_stayMinusErrorVars: ";
             bstr += Std.string(stay_minus_error_vars);
             bstr += "\n";
-            bstr += "edit_var_map:\n" + Std.string(edit_var_map);
+            bstr += "_editVarMap:\n" + Std.string(edit_var_map);
             bstr += "\n";
         return bstr;
     }
 
     public function add_with_artificial_variable(expr:Expression) {
-        C.fnenter('add_with_artificial_variable $expr');
+        C.fnenter('addWithArtificialVariable: $expr');
         var av = new SlackVariable({ value:++artificial_counter, prefix:'a' });
         var az = new ObjectiveVariable({ name:'az' });
         var azrow : Expression = expr.clone();
-        C.log('before add_rows\n' + this);
+        C.log('before addRows:\n' + this);
         add_row(az, azrow);
         add_row(av, expr);
-        C.log('after add_rows\n' + this);
+        C.log('after addRows:\n' + this);
         optimize(az);
         var az_tableau_row = rows.get(az);
         C.log("az_tableau_row.constant == " + az_tableau_row.constant);
@@ -433,7 +433,7 @@ class SimplexSolver extends Tableau {
     } //add_with_artificial_variable
 
     public function try_adding_directly(expr:Expression) {
-        C.fnenter('try_adding_directly $expr');
+        C.fnenter('tryAddingDirectly: $expr');
         var subject = choose_subject(expr);
         if(subject == null) {
             C.fnexit('returning false');
@@ -449,7 +449,7 @@ class SimplexSolver extends Tableau {
     } //try_adding_directly
 
     public function choose_subject(expr:Expression) {
-        C.fnenter('choose_subject $expr');
+        C.fnenter('chooseSubject: $expr');
         var subject = null;
         var found_unrestricted = false;
         var found_new_restricted = false;
@@ -508,7 +508,7 @@ class SimplexSolver extends Tableau {
     } //choose_subject
 
     public function delta_edit_constant(delta:Float, plus_error_var:AbstractVariable, minus_error_var:AbstractVariable ) {
-        C.fnenter('delta_edit_constant: $delta, $plus_error_var, $minus_error_var');
+        C.fnenter('deltaEditConstant: $delta, $plus_error_var, $minus_error_var');
 
         var expr_plus = rows.get(plus_error_var);
         if(expr_plus != null) {
@@ -545,7 +545,7 @@ class SimplexSolver extends Tableau {
     } //delta_edit_constant
 
     public function dual_optimize() {
-        C.fnenter('dual_optimize');
+        C.fnenter('dualOptimize');
 
         var zrow = rows.get(objective);
         while(infeasible_rows.length > 0) {
@@ -577,9 +577,9 @@ class SimplexSolver extends Tableau {
     } //dual_optimize
 
     public function new_expression(cn:AbstractConstraint, eplus_eminus:Array<AbstractVariable>, prev_edit_const:Array<Float> ) {
-        C.fnenter('new_expression $cn' );
-        C.log('cn.is_inequality: ' +cn.is_inequality);
-        C.log('cn.is_required: ' +cn.is_required);
+        C.fnenter('newExpression: $cn' );
+        C.log('cn.isInequality == ' +cn.is_inequality);
+        C.log('cn.required == ' +cn.is_required);
 
         var cnexpr = cn.expression;
         var expr = Expression.from_constant(cnexpr.constant);
@@ -626,7 +626,7 @@ class SimplexSolver extends Tableau {
                 prev_edit_const[0] = cnexpr.constant;
                 expr.set_variable(dummyvar, 1);
                 marker_vars.set(cn, dummyvar);
-                C.log('adding dummyvar == d${dummy_counter}');
+                C.log('Adding dummyVar == d${dummy_counter}');
             } else {
                 C.log('Equality, not required');
                 slack_counter++;
@@ -669,7 +669,7 @@ class SimplexSolver extends Tableau {
     } //new_expression
 
     public function optimize(zvar:ObjectiveVariable) {
-        C.fnenter('optimize: $zvar');
+        C.fnenter('optimize: ${zvar.val}');
         C.log(this);
         optimize_count++;
 
@@ -695,18 +695,18 @@ class SimplexSolver extends Tableau {
 
             if(objectivecoeff >= -C.epsilon) return;
 
-            C.log('entryvar: $entryvar objectivecoeff:$objectivecoeff');
+            C.log('entryVar: $entryvar objectiveCoeff: $objectivecoeff');
 
             var minratio = max_float;
             var columnvars = columns.get(entryvar);
             var r = 0.0;
 
             for(v in columnvars) {
-                C.log('checking $v');
+                C.log('Checking ${v.val}');
                 if(v.is_pivotable) {
                     var expr = rows.get(v);
                     var coeff = expr.coefficient_for(entryvar);
-                    C.log('is_pivotable, coeff = $coeff');
+                    C.log('pivotable, coeff = $coeff');
                     if(coeff < 0) {
                         r = -expr.constant / coeff;
                         if(r < minratio || (C.approx(r, minratio) && v.hashcode < exitvar.hashcode)) {
@@ -729,19 +729,19 @@ class SimplexSolver extends Tableau {
     } //optimize
 
     public function pivot(entryvar:AbstractVariable, exitvar:AbstractVariable) {
-        C.fnenter('pivot $entryvar $exitvar');
+        C.log('pivot:  $entryvar $exitvar');
 
         if(entryvar == null) C.log("pivot: entryvar is null");
         if(exitvar == null) C.log("pivot: exitvar is null");
 
         var expr = remove_row(exitvar);
         expr.change_subject(exitvar, entryvar);
-        expr.substitute_out(entryvar, expr);
+        substitute_out(entryvar, expr);
         add_row(entryvar, expr);
     }
 
     function reset_stay_constants() {
-        C.fnenter('reset_stay_constants');
+        C.fnenter('resetStayConstants');
         var spev = stay_plus_error_vars;
         var l = spev.length;
         for(i in 0 ... l) {
@@ -759,7 +759,7 @@ class SimplexSolver extends Tableau {
     var callbacks:Array< Array<ChangeInfo>->Void >;
 
     function set_external_variables() {
-        C.fnenter('set_external_variables :' );
+        C.fnenter('_setExternalVariables:' );
         C.log(this);
         var _changed:Array<{name:String, c:Float}> = [];
 
@@ -803,10 +803,10 @@ class SimplexSolver extends Tableau {
     }
 
     public function insert_error_var(cn:AbstractConstraint, avar:AbstractVariable) {
-        C.fnenter('insert_error_var: $cn, ${avar.value}');
+        C.fnenter('insertErrorVar:$cn, ${avar.value}');
         var constraint_set = error_vars.get(cn); //:note:changed to cn, as that was wrong?
         if(constraint_set == null) {
-            constraint_set = [];
+            constraint_set = []; C.inc();
             error_vars.set(cn, constraint_set);
         }
         constraint_set.push(avar);

@@ -18,6 +18,10 @@ class Expression {
     }
 
     public function init_from_hash(_constant:Float, t:Map<AbstractVariable, Float>) {
+        C.log("*******************************");
+        C.log("clone c.initializeFromHash");
+        C.log("*******************************");
+
         constant = _constant;
         terms = new Map();
         for(v in t.keys()) terms.set(v, t.get(v));
@@ -40,6 +44,10 @@ class Expression {
     }
 
     public function clone() {
+        C.log("*******************************");
+        C.log("clone c.Expression");
+        C.log("*******************************");
+
         var e = Expression.empty();
         return e.init_from_hash(constant, terms);
     }
@@ -75,7 +83,7 @@ class Expression {
     }
 
     public function divide(x:Float) {
-        if(Math.abs(x) < 0.000001) throw Error.NonExpression;
+        if(C.approx(x,0)) throw Error.NonExpression;
         return times(1/x);
     }
 
@@ -96,7 +104,7 @@ class Expression {
         var coeff = terms.get(v);
         if(coeff != null) {
             var new_coeff = coeff+cd;
-            if(new_coeff == 0 || (Math.abs(new_coeff) < 0.000001)) {
+            if(new_coeff == 0 || C.approx(new_coeff,0)) {
                 if(solver != null) {
                     solver.note_removed(v, subject);
                 }
@@ -105,7 +113,7 @@ class Expression {
                 set_variable(v, new_coeff);
             }
         } else {
-            if(!(Math.abs(cd) < 0.000001)) {
+            if (!C.approx(cd, 0)) {
                 set_variable(v, cd);
                 if(solver != null) {
                     solver.note_added(v, subject);
@@ -137,6 +145,7 @@ class Expression {
     } //any_pivotable_variable
 
     public function substitute_out(outvar:AbstractVariable, expr:Expression, ?subject:AbstractVariable, ?solver:Tableau) {
+
         var multiplier = terms.get(outvar);
         terms.remove(outvar);
         constant += (multiplier * expr.constant);
@@ -145,7 +154,7 @@ class Expression {
             var old_coeff = terms.get(clv);
             if(old_coeff != null) {
                 var new_coeff = old_coeff + multiplier * coeff;
-                if(Math.abs(new_coeff) < 0.000001) {
+                if(C.approx(new_coeff,0)) {
                     solver.note_removed(clv, subject);
                     terms.remove(clv);
                 } else {

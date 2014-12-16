@@ -17,8 +17,11 @@ class AbstractVariable {
     public var prefix : String = '';
     public var name : String;
     public var value : Float = 0;
-    public var vvalue : String = '';
+    public var _value : String = '';
     public var hashcode : Int;
+
+    public var val (get,never):String;
+        function get_val() return (_value == '') ? Std.string(value) : _value;
 
     var tag: String;
 
@@ -40,7 +43,6 @@ class AbstractVariable {
     }
 
     function toString() {
-        var val:String = (vvalue == '') ? Std.string(value) : vvalue;
         return '$prefix[$name:$val]';
     }
 
@@ -101,7 +103,7 @@ class ObjectiveVariable extends AbstractVariable {
 
         super( args );
 
-        vvalue = 'obj';
+        _value = 'obj';
     }
 
 } //ObjectiveVariable
