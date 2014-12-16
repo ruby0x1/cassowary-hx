@@ -36,7 +36,7 @@ class AbstractConstraint {
 
     } //new
 
-    function toString() return '$tag: $strength {$weight} ($expression)';
+    function toString() return '$tag:$strength {$weight} ($expression)';
 
 } //AbstractConstraint
 
@@ -206,12 +206,16 @@ class Inequality extends Constraint {
 
     } //new
 
+    override function toString() {
+        return super.toString() + ' >= 0) id: $hashcode';
+    }
+
 } //Inequality
 
 
 class Equation extends Constraint {
 
-    public function new(a1:Dynamic, a2:Dynamic, a3:Dynamic, a4:Dynamic) {
+    public function new(a1:Dynamic, a2:Dynamic, ?a3:Dynamic, ?a4:Dynamic) {
         if(Std.is(a1, Expression) && (a2 == null || Std.is(a2, Strength))) {
 
             super(a1, a2, a3);
@@ -258,6 +262,11 @@ class Equation extends Constraint {
         }
 
     } //new
+
+    override function toString() {
+        return super.toString() + ' = 0)';
+    }
+
 
 } //Equation
 

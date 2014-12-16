@@ -184,10 +184,13 @@ class Expression {
         return true;
     }
 
+    public function str() {
+        return '{ constant: $constant, terms: ${Std.string(terms)} }';
+    }
     function toString() {
         var bstr = '';
         var needsplus = false;
-        if(C.approx(constant,0) || is_constant) {
+        if(!C.approx(constant,0) || is_constant) {
             bstr += constant;
             if(is_constant) {
                 return bstr;
@@ -197,7 +200,7 @@ class Expression {
         }
         each(function(clv,coeff){
             if(needsplus) bstr += ' + ';
-            bstr += coeff + '*' + clv;
+            bstr += coeff + '*' + clv.value;
             needsplus = true;
         });
         return bstr;

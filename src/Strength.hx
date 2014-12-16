@@ -4,26 +4,25 @@ class Strength {
 
     public var symbolic_weight:SymbolicWeight;
     public var is_required(get,never): Bool;
+    public var name:String = '';
 
-    public function new( name:String, ?s:SymbolicWeight, ?w1:Null<Float>, ?w2:Null<Float>, ?w3:Null<Float> ) {
+    public function new( _name:String, s:Dynamic, ?w2:Float, ?w3:Float) {
 
-        var has_3_weights = (w1 != null && w1 != null && w3 != null);
-        var has_any_weights = (w1 != null || w1 != null || w3 != null);
-        var has_symbolic = s != null;
+        name = _name;
 
-        if(has_symbolic && has_3_weights) throw "Strength: either a s OR 3 weights are given, not both";
-        if(has_symbolic && has_any_weights) throw "Strength: either a s OR 3 weights are given, not both";
-        if(!has_symbolic && !has_3_weights) throw "Strength: All 3 weights are required if using weights";
-
-        if(has_symbolic) {
+        if( Std.is(s, SymbolicWeight) ) {
             symbolic_weight = s;
         } else {
-            symbolic_weight = new SymbolicWeight([w1, w2, w3]);
+            symbolic_weight = new SymbolicWeight([s, w2, w3]);
         }
     }
 
     function get_is_required() {
         return this == Strength.required;
+    }
+
+    function toString() {
+        return '$name' + (!is_required ? (':$symbolic_weight') : '');
     }
 
     public static var required = new Strength("<Required>", 1000,   1000,   1000 );

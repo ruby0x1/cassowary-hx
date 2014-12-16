@@ -31,7 +31,7 @@ class Tableau  {
     }
 
     public function note_removed( v:AbstractVariable, subject:AbstractVariable ) {
-        trace("Tableau.note_removed: " + v + ' / ' + subject);
+        C.fnenter("note_removed: " + v + ' / ' + subject);
         var col = columns.get(v);
         if(col != null) {
             col.remove(subject);
@@ -39,7 +39,7 @@ class Tableau  {
     }
 
     public function note_added( v:AbstractVariable, subject:AbstractVariable ) {
-        trace("Tableau.note_added: " + v + ' / ' + subject);
+        C.fnenter("note_added: " + v + ' / ' + subject);
         if(subject != null) {
             insert_column_var(v, subject);
         }
@@ -62,29 +62,29 @@ class Tableau  {
 
     function add_row(aVar:AbstractVariable, expr:Expression) {
 
-        trace("Tableau.add_row: " + aVar + ", " + expr);
+        var val = aVar.vvalue == '' ? Std.string(aVar.value) : aVar.vvalue;
+        C.fnenter("addRow: " + val + ", " + expr);
 
         rows.set(aVar, expr);
 
-        //:todo:
-        // expr.terms.each(function(clv, coeff) {
-        //     insert_column_var(clv, aVar);
-        //     if(clv.is_external) {
-        //         this.external_parametric_vars.push(clv);
-        //     }
-        // });
+        expr.each(function(clv, coeff) {
+            insert_column_var(clv, aVar);
+            if(clv.is_external) {
+                this.external_parametric_vars.push(clv);
+            }
+        });
 
         if(aVar.is_external) {
             this.external_rows.push(aVar);
         }
 
-        trace(this);
+        C.log(this);
 
     } //add_row
 
     function remove_column(aVar: AbstractVariable) {
 
-        trace("Tableau.remove_column: " + aVar);
+        C.fnenter("remove_column:" + aVar);
 
         var _rows = this.columns.get(aVar);
         if(_rows != null) {
@@ -94,7 +94,7 @@ class Tableau  {
                 expr.terms.remove(aVar);
             } //for
         } else {
-            trace('\t Could not find var $aVar in columns');
+            C.log('\t Could not find var $aVar in columns');
         }
 
         if(aVar.is_external) {
@@ -110,19 +110,18 @@ class Tableau  {
 
     function remove_row( aVar:AbstractVariable ) {
 
-        trace("Tableau.remove_row:" + aVar);
+        C.fnenter("remove_row:" + aVar);
 
         var expr = rows.get(aVar);
         if(expr == null) throw "null expression";
 
-        //:todo:
-        // expr.terms.each(function(clv, coeff) {
-        //     var varset = columns.get(clv);
-        //     if (varset != null) {
-        //         trace("Tableau.remove_row removing from varset: " + aVar);
-        //         varset.remove(aVar);
-        //     }
-        // });
+        expr.each(function(clv, coeff) {
+            var varset = columns.get(clv);
+            if (varset != null) {
+                C.log("Tableau.remove_row removing from varset: " + aVar);
+                varset.remove(aVar);
+            }
+        });
 
         this.infeasible_rows.remove(aVar);
         if(aVar.is_external) {
@@ -131,7 +130,7 @@ class Tableau  {
 
         rows.remove(aVar);
 
-        trace("Tableau.remove_row returning " + expr);
+        C.log("Tableau.remove_row returning " + expr);
 
         return expr;
 
@@ -139,13 +138,13 @@ class Tableau  {
 
     function substitute_out( oldvar:AbstractVariable, expr:Expression ) {
 
-        trace("Tableau.substitute_out: " + oldvar + ", " + expr);
-        trace(this);
+        C.fnenter("substitute_out: " + oldvar + ", " + expr);
+        C.log(this);
 
         var varset = columns.get(oldvar);
         for(v in varset) {
             var row = rows.get(v);
-            // row.substitute_out(oldvar, expr, v, this); :todo:
+            row.substitute_out(oldvar, expr, v, this);
             if(v.is_restricted && row.constant < 0) {
                 infeasible_rows.push(v);
             }
@@ -192,9 +191,9 @@ class Tableau  {
             bstr += columns;
             bstr += "\nInfeasible rows: ";
             bstr += infeasible_rows;
-            bstr += "External basic variables: ";
+            bstr += "\n External basic variables: ";
             bstr += external_rows;
-            bstr += "External parametric variables: ";
+            bstr += "\n External parametric variables: ";
             bstr += external_parametric_vars;
 
         return bstr;

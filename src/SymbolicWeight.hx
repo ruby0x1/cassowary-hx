@@ -8,9 +8,11 @@ class SymbolicWeight {
     public function new( weights:Array<Float> ) {
         var factor = 1.0;
 
-        for(weight in weights) {
-            value = weight * factor;
+        var i = weights.length - 1;
+        while( i >= 0 ) {
+            value += weights[i] * factor;
             factor *= multiplier;
+            i--;
         }
     }
 

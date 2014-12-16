@@ -17,6 +17,7 @@ class AbstractVariable {
     public var prefix : String = '';
     public var name : String;
     public var value : Float = 0;
+    public var vvalue : String = '';
     public var hashcode : Int;
 
     var tag: String;
@@ -27,7 +28,6 @@ class AbstractVariable {
     public function new( ?args:VariableArgs ) {
         //name defaults to a hash id then,
         //and in subclasses is prefixed before calling super
-        //:todo: using luxe hash instead of isolate
         hashcode = C.inc();
         name += hashcode;
 
@@ -39,7 +39,10 @@ class AbstractVariable {
         }
     }
 
-    function toString() return '$prefix[$name:$value]';
+    function toString() {
+        var val:String = (vvalue == '') ? Std.string(value) : vvalue;
+        return '$prefix[$name:$val]';
+    }
 
 } //AbstractVariable
 
@@ -98,7 +101,7 @@ class ObjectiveVariable extends AbstractVariable {
 
         super( args );
 
-        tag = 'obj';
+        vvalue = 'obj';
     }
 
 } //ObjectiveVariable
