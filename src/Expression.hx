@@ -136,7 +136,7 @@ class Expression {
 
     } //any_pivotable_variable
 
-    public function substitute_out(outvar:AbstractVariable, expr:Expression, subject:AbstractVariable, solver:Tableau) {
+    public function substitute_out(outvar:AbstractVariable, expr:Expression, ?subject:AbstractVariable, ?solver:Tableau) {
         var multiplier = terms.get(outvar);
         terms.remove(outvar);
         constant += (multiplier * expr.constant);

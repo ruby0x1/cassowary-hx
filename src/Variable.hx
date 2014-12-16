@@ -46,7 +46,7 @@ class AbstractVariable {
 @:forward(prefix, name, value, is_dummy, is_external, is_pivotable, is_restricted, tag, _ff)
 abstract Variable(CVariable) from CVariable to CVariable {
 
-    public inline function new(args:VariableArgs) {
+    public inline function new(?args:VariableArgs) {
         this = new CVariable(args);
     }
 
@@ -65,7 +65,7 @@ class CVariable extends AbstractVariable {
 
     static var map: Map<String, AbstractVariable> = new Map();
 
-    public function new( args:VariableArgs ) {
+    public function new( ?args:VariableArgs ) {
         name = 'v';
 
         super( args );
@@ -79,7 +79,7 @@ class CVariable extends AbstractVariable {
 
 class DummyVariable extends AbstractVariable {
 
-    public function new( args:VariableArgs ) {
+    public function new( ?args:VariableArgs ) {
         name = 'd';
 
         super( args );
@@ -93,7 +93,7 @@ class DummyVariable extends AbstractVariable {
 
 class ObjectiveVariable extends AbstractVariable {
 
-    public function new( args:VariableArgs ) {
+    public function new( ?args:VariableArgs ) {
         name = 'o';
 
         super( args );
@@ -105,7 +105,7 @@ class ObjectiveVariable extends AbstractVariable {
 
 class SlackVariable extends AbstractVariable {
 
-    public function new( args:VariableArgs ) {
+    public function new( ?args:VariableArgs ) {
         name = 's';
 
         super( args );

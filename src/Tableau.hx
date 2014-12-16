@@ -160,7 +160,7 @@ class Tableau  {
 
     } //substitute_out
 
-    public function internal_info() {
+    public function get_internal_info() {
 
         var rowsize = Lambda.count(rows);
         var retstr = "Tableau Information:\n";
@@ -175,7 +175,7 @@ class Tableau  {
 
         return retstr;
 
-    } //internal_info
+    } //get_internal_info
 
     function toString() {
 
