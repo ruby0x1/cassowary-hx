@@ -49,11 +49,11 @@ class Tableau  {
         // Convenience function to insert a variable into
         // the set of rows stored at columns[param_var],
         // creating a new set if needed
-    function insert_column_var( param_var:Variable, rowvar: Variable ) {
+    function insert_column_var( param_var:AbstractVariable, rowvar: AbstractVariable ) {
 
         var rowset = columns.get(param_var);
         if(rowset == null) {
-            rowset = []
+            rowset = [];
             columns.set(param_var, rowset);
         }
 
@@ -75,7 +75,7 @@ class Tableau  {
         // });
 
         if(aVar.is_external) {
-            this._externalRows.add(aVar);
+            this.external_rows.push(aVar);
         }
 
         trace(this);
@@ -124,7 +124,7 @@ class Tableau  {
         //     }
         // });
 
-        this._infeasibleRows.remove(aVar);
+        this.infeasible_rows.remove(aVar);
         if(aVar.is_external) {
             external_rows.remove(aVar);
         }
@@ -151,7 +151,7 @@ class Tableau  {
             }
         }
 
-        if(oldvar.isExternal) {
+        if(oldvar.is_external) {
             external_rows.push(oldvar);
             external_parametric_vars.remove(oldvar);
         }
@@ -166,7 +166,7 @@ class Tableau  {
         var retstr = "Tableau Information:\n";
             retstr += "Rows: " + rowsize;
             retstr += " (= " + (rowsize - 1) + " constraints)";
-            retstr += "\nColumns: " + Lamda.count(columns);
+            retstr += "\nColumns: " + Lambda.count(columns);
             retstr += "\nInfeasible Rows: " + infeasible_rows.length;
             retstr += "\nExternal basic variables: " + external_rows.length;
             retstr += "\nExternal parametric variables: ";

@@ -3,6 +3,7 @@
 
 import tests.Point_test;
 import tests.Strength_test;
+import Constraint;
 
 class Main extends luxe.Game {
 

@@ -9,11 +9,11 @@ class Expression {
     public var terms : Map<AbstractVariable, Float>;
 
     public var constant : Float = 0.0;
-    public function new( cvar:AbstractVariable, _value:Float, _constant:Float=0.0) {
+    public function new( cvar:AbstractVariable, _value:Float=1.0, _constant:Float=0.0) {
         terms = new Map();
         constant = _constant;
         if(cvar != null) {
-            set_variable(cvar, value);
+            set_variable(cvar, _value);
         }
     }
 
@@ -45,12 +45,12 @@ class Expression {
     }
 
     public function times(x:Float) {
-        return this.clone().multiply_me(x);
+        return clone().multiply_me(x);
     }
 
     public function timese(x:Expression) {
         if(is_constant) {
-            return x.times(this.constant);
+            return x.times(constant);
         } else if(x.is_constant) {
             return times(x.constant);
         } else {
@@ -59,33 +59,32 @@ class Expression {
     }
 
     public function plus(expr:Expression) {
-        return this.clone().add_expr(expr,1);
+        return clone().add_expr(expr,1);
     }
 
     public function plusv(cvar:Variable) {
-        return this.clone().add_variable(cvar, 1);
+        return clone().add_variable(cvar, 1);
     }
 
     public function minus(expr:Expression) {
-        return this.clone().add_expr(expr,-1);
+        return clone().add_expr(expr,-1);
     }
 
     public function minusv(cvar:Variable) {
-        return this.clone().add_variable(cvar, -1);
+        return clone().add_variable(cvar, -1);
     }
 
     public function divide(x:Float) {
         if(Math.abs(x) < 0.000001) throw Error.NonExpression;
-        return this.times(1/x);
+        return times(1/x);
     }
 
     public function dividee(x:Expression) {
-        if(Math.abs(x) < 0.000001) throw Error.NonExpression;
         if(!x.is_constant) throw Error.NonExpression;
-        return this.times(1/x.constant);
+        return times(1/x.constant);
     }
 
-    public function add_expr(expr:Expression, n:Float, subject:AbstractVariable, solver:Tableau) {
+    public function add_expr(expr:Expression, n:Float=1, ?subject:AbstractVariable, ?solver:Tableau) {
         constant += (n * expr.constant);
         expr.each(function(clv, coeff){
             add_variable(clv, coeff*n, subject, solver);
@@ -93,7 +92,7 @@ class Expression {
         return this;
     }
 
-    public function add_variable(v:AbstractVariable, cd:Float=1.0, subject:AbstractVariable, solver:Tableau) {
+    public function add_variable(v:AbstractVariable, cd:Float=1.0, ?subject:AbstractVariable, ?solver:Tableau) {
         var coeff = terms.get(v);
         if(coeff != null) {
             var new_coeff = coeff+cd;
@@ -108,7 +107,7 @@ class Expression {
         } else {
             if(!(Math.abs(cd) < 0.000001)) {
                 set_variable(v, cd);
-                if(solver) {
+                if(solver != null) {
                     solver.note_added(v, subject);
                 }
             }
@@ -177,7 +176,7 @@ class Expression {
         if( Lambda.count(terms) != Lambda.count(other)) return false;
         for(clv in terms.keys()) {
             var found=false;
-            for(oclv in other.terms.keys()) {
+            for(oclv in other.keys()) {
                 if(oclv == clv) found = true;
             }
             if(!found) return false;
@@ -187,7 +186,7 @@ class Expression {
 
     public function equals(other:Expression) {
         if(this == other) return true;
-        return (other.constant == this.constant && terms_equals(other.terms));
+        return (other.constant == constant && terms_equals(other.terms));
     }
 
     public function coefficient_for(clv:AbstractVariable) {
@@ -216,7 +215,7 @@ class Expression {
     }
 
     public function Dividee(e1:Expression, e2:Expression) {
-        return e1.divide(e2);
+        return e1.dividee(e2);
     }
 
     public static function empty(){ return new Expression(null, 1, 0); }
