@@ -9,7 +9,7 @@ class C {
 
     static function println(v:Dynamic) {
         #if js
-            untyped console.log(v);
+            untyped console.log(''+v);
         #else
             Sys.print(v);
         #end

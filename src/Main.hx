@@ -46,8 +46,8 @@ class Main extends luxe.Game {
         // tests();
         // return;
 
-        C.logging = true;
-        C.verbose = true;
+        // C.logging = true;
+        // C.verbose = true;
 
         solver = new SimplexSolver();
         mp = [];
@@ -63,78 +63,78 @@ class Main extends luxe.Game {
 
         solver.add_point_stays([db[0].center,db[1].center,db[2].center,db[3].center]);
 
-        // var cle:Expression = null;
-        // var cleq:Equation = null;
+        var cle:Expression = null;
+        var cleq:Equation = null;
 
-        // cle = Expression.from_constant(db[0].x).plusv(db[1].x).dividef(2);
-        // cleq = new Equation(mp[0].x, cle);
+        cle = Expression.from_constant(db[0].x).plusv(db[1].x).dividef(2);
+        cleq = new Equation(mp[0].x, cle);
 
-        // solver.add_constraint(cleq);
+        solver.add_constraint(cleq);
 
-        // cle = Expression.from_constant(db[0].y).plusv(db[1].y).dividef(2);
-        // cleq = new Equation(mp[0].y, cle);
+        cle = Expression.from_constant(db[0].y).plusv(db[1].y).dividef(2);
+        cleq = new Equation(mp[0].y, cle);
 
-        // solver.add_constraint(cleq);
+        solver.add_constraint(cleq);
 
-        // cle = Expression.from_constant(db[1].x).plusv(db[2].x).dividef(2);
-        // cleq = new Equation(mp[1].x, cle);
+        cle = Expression.from_constant(db[1].x).plusv(db[2].x).dividef(2);
+        cleq = new Equation(mp[1].x, cle);
 
-        // solver.add_constraint(cleq);
+        solver.add_constraint(cleq);
 
-        // cle = Expression.from_constant(db[1].y).plusv(db[2].y).dividef(2);
-        // cleq = new Equation(mp[1].y, cle);
+        cle = Expression.from_constant(db[1].y).plusv(db[2].y).dividef(2);
+        cleq = new Equation(mp[1].y, cle);
 
-        // solver.add_constraint(cleq);
+        solver.add_constraint(cleq);
 
-        // cle = Expression.from_constant(db[2].x).plusv(db[3].x).dividef(2);
-        // cleq = new Equation(mp[2].x, cle);
+        cle = Expression.from_constant(db[2].x).plusv(db[3].x).dividef(2);
+        cleq = new Equation(mp[2].x, cle);
 
-        // solver.add_constraint(cleq);
+        solver.add_constraint(cleq);
 
-        // cle = Expression.from_constant(db[2].y).plusv(db[3].y).dividef(2);
-        // cleq = new Equation(mp[2].y, cle);
+        cle = Expression.from_constant(db[2].y).plusv(db[3].y).dividef(2);
+        cleq = new Equation(mp[2].y, cle);
 
-        // solver.add_constraint(cleq);
+        solver.add_constraint(cleq);
 
-        // cle = Expression.from_constant(db[3].x).plusv(db[0].x).dividef(2);
-        // cleq = new Equation(mp[3].x, cle);
+        cle = Expression.from_constant(db[3].x).plusv(db[0].x).dividef(2);
+        cleq = new Equation(mp[3].x, cle);
 
-        // solver.add_constraint(cleq);
+        solver.add_constraint(cleq);
 
-        // cle = Expression.from_constant(db[3].y).plusv(db[0].y).dividef(2);
-        // cleq = new Equation(mp[3].y, cle);
+        cle = Expression.from_constant(db[3].y).plusv(db[0].y).dividef(2);
+        cleq = new Equation(mp[3].y, cle);
 
-        // solver.add_constraint(cleq);
+        solver.add_constraint(cleq);
 
-        // cle = C.plus(db[0].x, 20);
+        cle = C.plus(db[0].x, 20);
 
-        // solver.add_constraint(new Inequality(cle, Op.LEQ, db[2].x))
-        //       .add_constraint(new Inequality(cle, Op.LEQ, db[3].x));
+        solver.add_constraint(new Inequality(cle, Op.LEQ, db[2].x))
+              .add_constraint(new Inequality(cle, Op.LEQ, db[3].x));
 
-        // cle = C.plus(db[1].x, 20);
+        cle = C.plus(db[1].x, 20);
 
-        // solver.add_constraint(new Inequality(cle, Op.LEQ, db[2].x))
-        //       .add_constraint(new Inequality(cle, Op.LEQ, db[3].x));
+        solver.add_constraint(new Inequality(cle, Op.LEQ, db[2].x))
+              .add_constraint(new Inequality(cle, Op.LEQ, db[3].x));
 
-        // cle = C.plus(db[0].y, 20);
+        cle = C.plus(db[0].y, 20);
 
-        // solver.add_constraint(new Inequality(cle, Op.LEQ, db[1].y))
-        //       .add_constraint(new Inequality(cle, Op.LEQ, db[2].y));
+        solver.add_constraint(new Inequality(cle, Op.LEQ, db[1].y))
+              .add_constraint(new Inequality(cle, Op.LEQ, db[2].y));
 
-        // cle = C.plus(db[3].y, 20);
+        cle = C.plus(db[3].y, 20);
 
-        // solver.add_constraint(new Inequality(cle, Op.LEQ, db[1].y))
-        //       .add_constraint(new Inequality(cle, Op.LEQ, db[2].y));
+        solver.add_constraint(new Inequality(cle, Op.LEQ, db[1].y))
+              .add_constraint(new Inequality(cle, Op.LEQ, db[2].y));
 
         // Add constraints to keep points inside window
-        // for(p in db) {
-        //   solver.add_constraint(new Inequality(p.x, Op.GEQ, 10));
-        //   solver.add_constraint(new Inequality(p.y, Op.GEQ, 10));
+        for(p in db) {
+          solver.add_constraint(new Inequality(p.x, Op.GEQ, 10));
+          solver.add_constraint(new Inequality(p.y, Op.GEQ, 10));
 
-        //   trace(p.x + ' <= ' + (Luxe.screen.w-10));
-        //   solver.add_constraint(new Inequality(p.x, Op.LEQ, Luxe.screen.w - 10));
-        //   solver.add_constraint(new Inequality(p.y, Op.LEQ, Luxe.screen.h - 10));
-        // }
+          trace(p.x + ' <= ' + (Luxe.screen.w-10));
+          solver.add_constraint(new Inequality(p.x, Op.LEQ, Luxe.screen.w - 10));
+          solver.add_constraint(new Inequality(p.y, Op.LEQ, Luxe.screen.h - 10));
+        }
 
         trace(solver);
 
