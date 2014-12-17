@@ -21,7 +21,7 @@ class AbstractVariable {
     public var hashcode : Int;
 
     public var val (get,never):String;
-        function get_val() return (_value == '') ? Std.string(value) : _value;
+        function get_val() return (_value != 'obj') ? Std.string(value) : _value;
 
     @:noCompletion
     public var _ff: Bool = false;

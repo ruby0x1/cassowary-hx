@@ -38,7 +38,7 @@ class Tableau  {
     }
 
     public function note_removed( v:AbstractVariable, subject:AbstractVariable ) {
-        C.log("noteRemovedVariable: " + v + ' / ' + subject);
+        C.log("noteRemovedVariable:  " + v + ' ' + subject);
         var col = columns.get(v);
         if(col != null) {
             col.remove(subject);
@@ -84,13 +84,13 @@ class Tableau  {
             this.external_rows.push(aVar);
         }
 
-        C.log(this);
+        C.logv(this);
 
     } //add_row
 
     function remove_column(aVar: AbstractVariable) {
 
-        C.fnenter("removeColumn:" + aVar);
+        C.fnenter("removeColumn:" + aVar.val);
 
         var _rows = this.columns.get(aVar);
         if(_rows != null) {
@@ -100,7 +100,7 @@ class Tableau  {
                 expr.terms.remove(aVar);
             } //for
         } else {
-            C.log('\t Could not find var $aVar in columns');
+            C.log('Could not find var $aVar in columns');
         }
 
         if(aVar.is_external) {
@@ -144,8 +144,8 @@ class Tableau  {
 
     function substitute_out( oldvar:AbstractVariable, expr:Expression ) {
 
-        C.fnenter("substituteOut: " + oldvar + ", " + expr);
-        C.log(this);
+        C.fnenter("substituteOut:" + oldvar.val + ", " + expr);
+        C.logv(this);
 
         var varset = columns.get(oldvar);
         for(v in varset) {

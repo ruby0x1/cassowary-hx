@@ -19,6 +19,10 @@ class C {
     }
 
     public static function log(v:Dynamic) {
+        if(logging) Sys.println(v);
+    }
+
+    public static function logv(v:Dynamic) {
         if(logging && verbose) Sys.println(v);
     }
 

@@ -4,8 +4,8 @@ import Constraint;
 
 typedef EditInfoArgs = {
     var constraint:AbstractConstraint;
-    var edit_plus:SlackVariable;
-    var edit_minus:SlackVariable;
+    var edit_plus:AbstractVariable;
+    var edit_minus:AbstractVariable;
     var prev_edit:Float;
     var index:Int;
 }
@@ -13,8 +13,8 @@ typedef EditInfoArgs = {
 class EditInfo {
 
     public var constraint:AbstractConstraint;
-    public var edit_plus:SlackVariable;
-    public var edit_minus:SlackVariable;
+    public var edit_plus:AbstractVariable;
+    public var edit_minus:AbstractVariable;
     public var prev_edit:Float;
     public var index:Int;
 

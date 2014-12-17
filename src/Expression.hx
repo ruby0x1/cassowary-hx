@@ -18,9 +18,9 @@ class Expression {
     }
 
     public function init_from_hash(_constant:Float, t:Map<AbstractVariable, Float>) {
-        C.log("*******************************");
-        C.log("clone c.initializeFromHash");
-        C.log("*******************************");
+        C.logv("*******************************");
+        C.logv("clone c.initializeFromHash");
+        C.logv("*******************************");
 
         constant = _constant;
         terms = new Map();
@@ -44,9 +44,9 @@ class Expression {
     }
 
     public function clone() {
-        C.log("*******************************");
-        C.log("clone c.Expression");
-        C.log("*******************************");
+        C.logv("*******************************");
+        C.logv("clone c.Expression");
+        C.logv("*******************************");
 
         var e = Expression.empty();
         return e.init_from_hash(constant, terms);

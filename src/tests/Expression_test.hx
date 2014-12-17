@@ -1,14 +1,14 @@
 package tests;
 
-import Strength;
+import Expression;
 
-class Strength_test extends mohxa.Mohxa {
+class Expression_test extends mohxa.Mohxa {
 
     public function new() {
 
         super();
 
-        describe('Strength', function(){
+        describe('Expression', function(){
             describe('ctor', function(){
                 
             });
