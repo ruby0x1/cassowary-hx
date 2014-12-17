@@ -146,7 +146,7 @@ class SimplexSolver extends Tableau {
         return this;
     } //remove_edit_vars_to
 
-    public function add_point_stays(points:Array<{x:Float,y:Float}>) {
+    public function add_point_stays(points:Array<{x:Variable,y:Variable}>) {
         C.log('addPointStays: ' + Std.string(points));
 
         var idx = 0;

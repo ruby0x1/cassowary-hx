@@ -8,9 +8,9 @@ class Point_test extends mohxa.Mohxa {
 
         describe('Point', function(){
             it('should be constructable', function(){
-                log(new Point());
-                log(new Point(4, 7));
-                log(new Point(3, 5, '1'));
+                trace(new Point());
+                trace(new Point(4, 7));
+                trace(new Point(3, 5, '1'));
             });
         });
 

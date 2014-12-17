@@ -12,8 +12,8 @@ class Main extends luxe.Game {
 
     override function config( config:luxe.AppConfig ) {
         // config.has_window = false;
-        config.window.width = 512;
-        config.window.height = 512;
+        config.window.width = 960;
+        config.window.height = 700;
         return config;
     } //config
 
@@ -40,6 +40,10 @@ class Main extends luxe.Game {
     var dbDragging:Int = -1;
     var db:Array<DraggableBox>;
     var mp:Array<DraggableBox>;
+    var cw:Float = 512;
+    var ch:Float = 512;
+    var cx:Float = 512;
+    var cy:Float = 512;
 
     override function ready() {
 
@@ -49,6 +53,11 @@ class Main extends luxe.Game {
         // C.logging = true;
         // C.verbose = true;
 
+        cx = (Luxe.screen.mid.x-(cw/2));
+        cy = (Luxe.screen.mid.y-(ch/2));
+
+        Luxe.draw.rectangle({ x:cx,y:cy,w:cw,h:ch, color:new luxe.Color(1,1,1,0.2)});
+
         solver = new SimplexSolver();
         mp = [];
         db = [];
@@ -56,52 +65,52 @@ class Main extends luxe.Game {
         for(a in 0 ... 8) db[a] = new DraggableBox(a);
         for(a in 0 ... 4) mp[a] = db[a+4];
 
-        db[0].center = {x:10,y:10};
-        db[1].center = {x:10,y:200};
-        db[2].center = {x:200,y:200};
-        db[3].center = {x:200,y:10};
+        db[0].center = new Point(cx+10,  cy+10);
+        db[1].center = new Point(cx+10,  cy+200);
+        db[2].center = new Point(cx+200, cy+200);
+        db[3].center = new Point(cx+200, cy+10);
 
         solver.add_point_stays([db[0].center,db[1].center,db[2].center,db[3].center]);
 
         var cle:Expression = null;
         var cleq:Equation = null;
 
-        cle = Expression.from_constant(db[0].x).plusv(db[1].x).dividef(2);
+        cle = Expression.from_variable(db[0].x).plusv(db[1].x).dividef(2);
         cleq = new Equation(mp[0].x, cle);
 
         solver.add_constraint(cleq);
 
-        cle = Expression.from_constant(db[0].y).plusv(db[1].y).dividef(2);
+        cle = Expression.from_variable(db[0].y).plusv(db[1].y).dividef(2);
         cleq = new Equation(mp[0].y, cle);
 
         solver.add_constraint(cleq);
 
-        cle = Expression.from_constant(db[1].x).plusv(db[2].x).dividef(2);
+        cle = Expression.from_variable(db[1].x).plusv(db[2].x).dividef(2);
         cleq = new Equation(mp[1].x, cle);
 
         solver.add_constraint(cleq);
 
-        cle = Expression.from_constant(db[1].y).plusv(db[2].y).dividef(2);
+        cle = Expression.from_variable(db[1].y).plusv(db[2].y).dividef(2);
         cleq = new Equation(mp[1].y, cle);
 
         solver.add_constraint(cleq);
 
-        cle = Expression.from_constant(db[2].x).plusv(db[3].x).dividef(2);
+        cle = Expression.from_variable(db[2].x).plusv(db[3].x).dividef(2);
         cleq = new Equation(mp[2].x, cle);
 
         solver.add_constraint(cleq);
 
-        cle = Expression.from_constant(db[2].y).plusv(db[3].y).dividef(2);
+        cle = Expression.from_variable(db[2].y).plusv(db[3].y).dividef(2);
         cleq = new Equation(mp[2].y, cle);
 
         solver.add_constraint(cleq);
 
-        cle = Expression.from_constant(db[3].x).plusv(db[0].x).dividef(2);
+        cle = Expression.from_variable(db[3].x).plusv(db[0].x).dividef(2);
         cleq = new Equation(mp[3].x, cle);
 
         solver.add_constraint(cleq);
 
-        cle = Expression.from_constant(db[3].y).plusv(db[0].y).dividef(2);
+        cle = Expression.from_variable(db[3].y).plusv(db[0].y).dividef(2);
         cleq = new Equation(mp[3].y, cle);
 
         solver.add_constraint(cleq);
@@ -126,14 +135,12 @@ class Main extends luxe.Game {
         solver.add_constraint(new Inequality(cle, Op.LEQ, db[1].y))
               .add_constraint(new Inequality(cle, Op.LEQ, db[2].y));
 
-        // Add constraints to keep points inside window
         for(p in db) {
-          solver.add_constraint(new Inequality(p.x, Op.GEQ, 10));
-          solver.add_constraint(new Inequality(p.y, Op.GEQ, 10));
+          solver.add_constraint(new Inequality(p.x, Op.GEQ, cx+10));
+          solver.add_constraint(new Inequality(p.y, Op.GEQ, cy+10));
 
-          trace(p.x + ' <= ' + (Luxe.screen.w-10));
-          solver.add_constraint(new Inequality(p.x, Op.LEQ, Luxe.screen.w - 10));
-          solver.add_constraint(new Inequality(p.y, Op.LEQ, Luxe.screen.h - 10));
+          solver.add_constraint(new Inequality(p.x, Op.LEQ, cx+cw - 10));
+          solver.add_constraint(new Inequality(p.y, Op.LEQ, cy+ch - 10));
         }
 
         trace(solver);
@@ -210,30 +217,26 @@ class Main extends luxe.Game {
 
 } //Main
 
-typedef P = {x:Float,y:Float};
 class DraggableBox {
     public var x (get,null) : Variable;
     public var y (get,null) : Variable;
     public var w:Float;
     public var h:Float;
 
-    public var center(get,set):P;
-    var _center:Point;
+    public var center:Point;
 
     public function new(_x:Float,?_y:Float,_w:Float=15,_h:Float=15) {
         w = _w;
         h = _h;
         if(_y == null) {
-            _center = new Point(0,0,Std.string(_x));
+            center = new Point(0,0,Std.string(_x));
         } else {
-            _center = new Point(_x,_y);
+            center = new Point(_x,_y);
         }
     }
 
-    function get_center() return { x:_center.x.value, y:_center.y.value };
-    function set_center(c:P) { _center.x.value = c.x; _center.y.value = c.y; return c; };
-    function get_x() return _center.x;
-    function get_y() return _center.y;
+    function get_x() return center.x;
+    function get_y() return center.y;
 
     public function draw(col:luxe.Color) {
         Luxe.draw.rectangle({
@@ -247,7 +250,7 @@ class DraggableBox {
     }
 
     function toString() {
-        return '${_center.x},${_center.y}';
+        return '${center.x},${center.y}';
     }
 
     public function contains(_x, _y) {
