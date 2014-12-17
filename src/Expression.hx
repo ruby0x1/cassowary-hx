@@ -9,11 +9,22 @@ class Expression {
     public var terms : Map<AbstractVariable, Float>;
 
     public var constant : Float = 0.0;
-    public function new( cvar:AbstractVariable, _value:Float=1.0, _constant:Float=0.0) {
+    public function new( ?cvar:Dynamic, ?_value:Float=1.0, ?_constant:Float=0.0) {
         terms = new Map();
         constant = _constant;
+
         if(cvar != null) {
-            set_variable(cvar, _value);
+            if(Std.is(cvar, AbstractVariable)) {
+                var avar:AbstractVariable = cvar;
+                set_variable(avar, _value);
+            } else if(Std.is(cvar, Float)) {
+                var f : Float = cvar;
+                if(!Math.isNaN(f)) {
+                    constant = f;
+                } else {
+                    throw "";
+                }
+            }
         }
     }
 
@@ -52,15 +63,15 @@ class Expression {
         return e.init_from_hash(constant, terms);
     }
 
-    public function times(x:Float) {
+    public function timesf(x:Float) {
         return clone().multiply_me(x);
     }
 
-    public function timese(x:Expression) {
+    public function times(x:Expression) {
         if(is_constant) {
-            return x.times(constant);
+            return x.timesf(constant);
         } else if(x.is_constant) {
-            return times(x.constant);
+            return timesf(x.constant);
         } else {
             throw Error.NonExpression;
         }
@@ -82,19 +93,27 @@ class Expression {
         return clone().add_variable(cvar, -1);
     }
 
-    public function divide(x:Float) {
+    public function dividef(x:Float) {
         if(C.approx(x,0)) throw Error.NonExpression;
-        return times(1/x);
+        return timesf(1/x);
     }
 
-    public function dividee(x:Expression) {
+    public function divide(x:Expression) {
         if(!x.is_constant) throw Error.NonExpression;
-        return times(1/x.constant);
+        return timesf(1/x.constant);
     }
 
-    public function add_expr(expr:Expression, n:Float=1, ?subject:AbstractVariable, ?solver:Tableau) {
-        constant += (n * expr.constant);
-        expr.each(function(clv, coeff){
+    public function add_expr(expr:Dynamic, n:Float=1, ?subject:AbstractVariable, ?solver:Tableau) {
+
+        var _expr:Expression = null;
+        if(Std.is(expr, AbstractVariable)) {
+            _expr = Expression.from_variable(expr);
+        } else {
+            _expr = expr;
+        }
+
+        constant += (n * _expr.constant);
+        _expr.each(function(clv, coeff){
             add_variable(clv, coeff*n, subject, solver);
         });
         return this;
@@ -197,6 +216,7 @@ class Expression {
         return '{ constant: $constant, terms: ${Std.string(terms)} }';
     }
     function toString() {
+
         var bstr = '';
         var needsplus = false;
         if(!C.approx(constant,0) || is_constant) {
@@ -233,24 +253,24 @@ class Expression {
         return e1.minus(e2);
     }
 
-    public function Times(e1:Expression, e2:Float) {
+    public function Timesf(e1:Expression, e2:Float) {
+        return e1.timesf(e2);
+    }
+
+    public function Times(e1:Expression, e2:Expression) {
         return e1.times(e2);
     }
 
-    public function Timese(e1:Expression, e2:Expression) {
-        return e1.timese(e2);
+    public function Dividef(e1:Expression, e2:Float) {
+        return e1.dividef(e2);
     }
 
-    public function Divide(e1:Expression, e2:Float) {
+    public function Divide(e1:Expression, e2:Expression) {
         return e1.divide(e2);
-    }
-
-    public function Dividee(e1:Expression, e2:Expression) {
-        return e1.dividee(e2);
     }
 
     public static function empty(){ return new Expression(null, 1, 0); }
     public static function from_constant(cons:Float){ return new Expression(null,0,cons); }
     public static function from_value(v:Float){ return new Expression(null, v, 0); }
-    public static function from_variable(v:AbstractVariable){ return new Expression(v,1,0); }
+    public static function from_variable(v:Variable){ return new Expression(v,1,0); }
 }

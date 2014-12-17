@@ -20,7 +20,8 @@ class Main extends luxe.Game {
         // new SymbolicWeight_test();
         // new Strength_test();
         // new SimplexSolver_test();
-        new Point_test();
+        // new Point_test();
+        new Expression_test();
 
     } //ready
 

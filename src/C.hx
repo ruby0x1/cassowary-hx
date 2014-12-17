@@ -1,4 +1,6 @@
 
+import Expression;
+import Variable;
 
 class C {
 
@@ -24,6 +26,36 @@ class C {
 
     public static function logv(v:Dynamic) {
         if(logging && verbose) Sys.println(v);
+    }
+
+    static function expr_from_var_or_value(v:Dynamic) : Expression {
+        if(Std.is(v, Float) || Std.is(v,Int)) {
+            return Expression.from_constant(v);
+        } else if(Std.is(v, AbstractVariable)) {
+            return Expression.from_variable(v);
+        }
+        return v;
+    }
+
+    public static function plus(e1:Dynamic,e2:Dynamic) : Expression {
+        e1 = expr_from_var_or_value(e1);
+        e2 = expr_from_var_or_value(e2);
+        return e1.plus(e2);
+    }
+    public static function minus(e1:Dynamic,e2:Dynamic) : Expression {
+        e1 = expr_from_var_or_value(e1);
+        e2 = expr_from_var_or_value(e2);
+        return e1.minus(e2);
+    }
+    public static function divide(e1:Dynamic,e2:Dynamic) : Expression {
+        e1 = expr_from_var_or_value(e1);
+        e2 = expr_from_var_or_value(e2);
+        return e1.divide(e2);
+    }
+    public static function times(e1:Dynamic,e2:Dynamic) : Expression {
+        e1 = expr_from_var_or_value(e1);
+        e2 = expr_from_var_or_value(e2);
+        return e1.times(e2);
     }
 
     public static var epsilon = 1e-8;
