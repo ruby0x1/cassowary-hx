@@ -213,7 +213,7 @@ class Expression {
     }
 
     public function str() {
-        return '{ constant: $constant, terms: ${Std.string(terms)} }';
+        return '{ constant: $constant, size:${Lambda.count(terms)}, terms: ${Std.string(terms)} }';
     }
     function toString() {
 

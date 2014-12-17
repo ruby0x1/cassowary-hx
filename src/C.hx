@@ -7,25 +7,31 @@ class C {
     public static var logging = false;
     public static var verbose = false;
 
+    static function println(v:Dynamic) {
+        #if js
+            untyped console.log(v);
+        #else
+            Sys.print(v);
+        #end
+    }
+
     public static function fnenter(v:Dynamic) {
         if(logging) {
-            Sys.print('* ');
-            Sys.println(v);
+            println('* '+v);
         }
     }
     public static function fnexit(v:Dynamic) {
         if(logging) {
-            Sys.print('- ');
-            Sys.println(v);
+            println('- '+v);
         }
     }
 
     public static function log(v:Dynamic) {
-        if(logging) Sys.println(v);
+        if(logging) println(v);
     }
 
     public static function logv(v:Dynamic) {
-        if(logging && verbose) Sys.println(v);
+        if(logging && verbose) println(v);
     }
 
     static function expr_from_var_or_value(v:Dynamic) : Expression {
@@ -75,7 +81,7 @@ class C {
 
     static var count = 1;
     public static function inc() {
-        // Sys.println('count=$count');
+        // println('count=$count');
         return count++;
     }
 

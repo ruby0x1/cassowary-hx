@@ -173,7 +173,7 @@ class SimplexSolver extends Tableau {
 
         var zrow = rows.get(objective);
         var evars = error_vars.get(cn);
-        C.logv('evars == ' + Std.string(evars));
+        C.logv('eVars == ' + Std.string(evars));
 
         if(evars != null) {
             for(cv in evars) {
@@ -183,9 +183,9 @@ class SimplexSolver extends Tableau {
                 } else { //expr == null
                     zrow.add_expr(expr, -cn.weight * cn.strength.symbolic_weight.value, objective, this);
                 } //expr != null
-            } //each evars
 
-            C.logv('now evars == ' + Std.string(evars));
+                C.logv('now eVars == ' + Std.string(evars));
+            } //each evars
         } //evars != null
 
         var marker = marker_vars.get(cn);
@@ -326,7 +326,7 @@ class SimplexSolver extends Tableau {
         if(cei == null) {
             throw "suggestValue for variable " + v + ", but var is not an edit variable";
         }
-
+        C.log(cei);
         var delta = x - cei.prev_edit;
         cei.prev_edit = x;
         delta_edit_constant(delta, cei.edit_plus, cei.edit_minus);
@@ -402,7 +402,7 @@ class SimplexSolver extends Tableau {
             bstr += Std.string(stay_minus_error_vars);
             bstr += "\n";
             bstr += "_editVarMap:\n" + Std.string(edit_var_map);
-            bstr += "\n";
+            bstr += "\n\n";
         return bstr;
     }
 
@@ -515,7 +515,7 @@ class SimplexSolver extends Tableau {
     } //choose_subject
 
     public function delta_edit_constant(delta:Float, plus_error_var:AbstractVariable, minus_error_var:AbstractVariable ) {
-        C.fnenter('deltaEditConstant: $delta, $plus_error_var, $minus_error_var');
+        C.fnenter('deltaEditConstant :$delta, $plus_error_var, $minus_error_var');
 
         var expr_plus = rows.get(plus_error_var);
         if(expr_plus != null) {
@@ -606,7 +606,7 @@ class SimplexSolver extends Tableau {
         });
 
         if(cn.is_inequality) {
-            C.logv('is_inequality, adding slack');
+            C.logv('Inequality, adding slack');
             ++slack_counter;
             slackvar = new SlackVariable({value:slack_counter, prefix:'s'});
             expr.set_variable(slackvar, -1);

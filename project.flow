@@ -1,11 +1,9 @@
 {
-
-  snow : {
-    config : {
-      has_loop : false
+  snow:{
+    config:{
+      has_loop:true
     }
   },
-
   project : {
     name : 'cassowaryhx',
     version : '1.0.0',

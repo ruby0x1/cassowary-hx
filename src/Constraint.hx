@@ -75,6 +75,15 @@ class Constraint extends AbstractConstraint {
 
 class Inequality extends Constraint {
 
+
+    function clone_or_new_cle(cle:Dynamic) : Expression {
+        if(Std.is(cle, Expression)) {
+            return cle.clone();
+        } else {
+            return new Expression(cle);
+        }
+    }
+
     public function new(a1:Dynamic, ?a2:Dynamic, ?a3:Dynamic, ?a4:Dynamic, ?a5:Dynamic ) {
 
         var a1IsExp = Std.is(a1, Expression);
@@ -87,11 +96,10 @@ class Inequality extends Constraint {
         // (cle || number), op, cv
         if((a1IsExp || a1IsNum) && a3IsVar) {
 
-            if(a1IsNum) a1 = Expression.from_constant(a1);
-            var cle:Expression = a1; var op:Op = a2; var cv:AbstractVariable = a3;
+            var cle:Expression = clone_or_new_cle(a1); var op:Op = a2; var cv:AbstractVariable = a3;
             var _strength:Strength = a4; var _weight:Float = a5;
 
-            super(cle.clone(), _strength, _weight);
+            super(cle, _strength, _weight);
 
             if(op == Op.LEQ) {
                 expression.multiply_me(-1);
@@ -108,11 +116,10 @@ class Inequality extends Constraint {
         // cv, op, (cle || number)
         if (a1IsVar && (a3IsExp || a3IsNum)) {
 
-            if(a3IsNum) a3 = Expression.from_constant(a3);
-            var cle:Expression = a3; var op:Op = a2; var cv:AbstractVariable = a1;
+            var cle:Expression = clone_or_new_cle(a3); var op:Op = a2; var cv:AbstractVariable = a1;
             var _strength:Strength = a4; var _weight:Float = a5;
 
-            super(cle.clone(), _strength, _weight);
+            super(cle, _strength, _weight);
 
             if(op == Op.GEQ) {
                 expression.multiply_me(-1);
@@ -130,16 +137,17 @@ class Inequality extends Constraint {
         // cle, op, num
 
         if(a1IsExp && a3IsNum) {
-            var cle1:Expression = a1; var op:Op = a2; var cle2:Expression = Expression.from_constant(a3);
+            var cle1:Expression = clone_or_new_cle(a1); var op:Op = a2; 
+            var cle2:Expression = clone_or_new_cle(a3);
             var _strength:Strength = a4; var _weight:Float = a5;
 
-            super(cle1.clone(), _strength, _weight);
+            super(cle1, _strength, _weight);
 
             if(op == Op.LEQ) {
                 expression.multiply_me(-1);
-                expression.add_expr(cle2.clone());
+                expression.add_expr(cle2);
             } else if(op == Op.GEQ) {
-                expression.add_expr(cle2.clone(), -1);
+                expression.add_expr(cle2, -1);
             } else {
                 throw "Constraint.Inequality: Invalid operator in c.Inequality constructor";
             }
@@ -152,16 +160,17 @@ class Inequality extends Constraint {
         // num, op, cle
 
         if (a1IsNum && a3IsExp) {
-            var cle1:Expression = a3; var op:Op = a2; var cle2:Expression = Expression.from_constant(a1);
+            var cle1:Expression = clone_or_new_cle(a3); var op:Op = a2; 
+            var cle2:Expression = clone_or_new_cle(a1);
             var _strength:Strength = a4; var _weight:Float = a5;
 
-            super(cle1.clone(), _strength, _weight);
+            super(cle1, _strength, _weight);
 
             if(op == Op.GEQ) {
                 expression.multiply_me(-1);
-                expression.add_expr(cle2.clone());
+                expression.add_expr(cle2);
             } else if(op == Op.LEQ) {
-                expression.add_expr(cle2.clone(), -1);
+                expression.add_expr(cle2, -1);
             } else {
                 throw "Constraint.Inequality: Invalid operator in c.Inequality constructor";
             }
@@ -174,16 +183,17 @@ class Inequality extends Constraint {
         // cle op cle
 
         if (a1IsExp && a3IsExp) {
-            var cle1:Expression = a1; var op:Op = a2; var cle2:Expression = a3;
+            var cle1:Expression = clone_or_new_cle(a1); var op:Op = a2; 
+            var cle2:Expression = clone_or_new_cle(a3);
             var _strength:Strength = a4; var _weight:Float = a5;
 
-            super(cle2.clone(), _strength, _weight);
+            super(cle2, _strength, _weight);
 
             if(op == Op.GEQ) {
                 expression.multiply_me(-1);
-                expression.add_expr(cle1.clone());
+                expression.add_expr(cle1);
             } else if(op == Op.LEQ) {
-                expression.add_expr(cle1.clone(), -1);
+                expression.add_expr(cle1, -1);
             } else {
                 throw "Constraint.Inequality: Invalid operator in c.Inequality constructor";
             }
@@ -212,6 +222,10 @@ class Inequality extends Constraint {
         } else {
             throw "Constraint.Inequality: Invalid operator in c.Inequality constructor";
         }
+
+            //must happen after super, as boot happens there
+            //and will override the value
+        is_inequality = true;
 
     } //new
 
