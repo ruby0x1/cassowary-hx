@@ -23,8 +23,6 @@ class AbstractVariable {
     public var val (get,never):String;
         function get_val() return (_value == '') ? Std.string(value) : _value;
 
-    var tag: String;
-
     @:noCompletion
     public var _ff: Bool = false;
 
@@ -48,7 +46,7 @@ class AbstractVariable {
 
 } //AbstractVariable
 
-@:forward(prefix, name, value, is_dummy, is_external, is_pivotable, is_restricted, tag, _ff)
+@:forward(prefix, name, value, val, is_dummy, is_external, is_pivotable, is_restricted, _value, _ff)
 abstract Variable(CVariable) from CVariable to CVariable {
 
     public inline function new(?args:VariableArgs) {
@@ -68,7 +66,8 @@ abstract Variable(CVariable) from CVariable to CVariable {
 
 class CVariable extends AbstractVariable {
 
-    static var map: Map<String, AbstractVariable> = new Map();
+    @:noCompletion
+    public static var map: Map<String, AbstractVariable> = new Map();
 
     public function new( ?args:VariableArgs ) {
         name = 'v';
@@ -91,7 +90,7 @@ class DummyVariable extends AbstractVariable {
 
         is_dummy = true;
         is_restricted = true;
-        tag = 'dummy';
+        _value = 'dummy';
     }
 
 } //DummyVariable
@@ -117,7 +116,7 @@ class SlackVariable extends AbstractVariable {
 
         is_pivotable = true;
         is_restricted = true;
-        tag = 'slack';
+        _value = 'slack';
     }
 
 } //SlackVariable

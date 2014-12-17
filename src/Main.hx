@@ -14,7 +14,8 @@ class Main extends luxe.Game {
 
         mohxa.Mohxa.use_colors = false;
 
-        new Tableau_test();
+        // new Tableau_test();
+        new Variable_test();
         // new Point_test();
         // new Strength_test();
 
