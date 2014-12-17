@@ -34,13 +34,13 @@ class Variable_test extends mohxa.Mohxa {
             describe('ctor', function(){
                 it('serializes', function(){
                     var d = new DummyVariable({name:'foo'});
-                    equal(d.val+'','dummy', 'valueOf = dummy');
+                    equal(d._value+'','dummy', 'valueOf = dummy');
                 });
 
                 it('has the correct properties', function(){
                     var x = new DummyVariable({name:'x'});
 
-                    equal(x.val+'','dummy', 'valueOf = dummy');
+                    equal(x._value+'','dummy', 'valueOf = dummy');
                     equal(x.is_external, false, 'not is_external');
                     equal(x.is_dummy, true, 'is_dummy');
                     equal(x.is_pivotable, false, 'not is_pivotable');
@@ -73,7 +73,7 @@ class Variable_test extends mohxa.Mohxa {
                 it('has the correct properties', function(){
                     var x = new SlackVariable({name:'x'});
 
-                    equal(x.val+'','slack', 'valueOf = slack');
+                    equal(x._value+'','slack', 'valueOf = slack');
                     equal(x.is_external, false, 'not is_external');
                     equal(x.is_dummy, false, 'not is_dummy');
                     equal(x.is_pivotable, true, 'is_pivotable');

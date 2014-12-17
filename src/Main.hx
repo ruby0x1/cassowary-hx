@@ -15,15 +15,17 @@ class Main extends luxe.Game {
         mohxa.Mohxa.use_colors = false;
         // C.logging = true;
 
-        // new Tableau_test();
-        // new Variable_test();
-        // new SymbolicWeight_test();
-        // new Strength_test();
-        // new SimplexSolver_test();
-        // new Point_test();
-        // new Expression_test();
-        // new EndToEnd_test();
+        new Tableau_test();
+        new Variable_test();
+        new SymbolicWeight_test();
+        new Strength_test();
+        new SimplexSolver_test();
+        new Point_test();
+        new Expression_test();
+        new EndToEnd_test();
         new Constraint_test();
+
+        mohxa.Mohxa.finish();
 
     } //ready
 
