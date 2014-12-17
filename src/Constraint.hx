@@ -75,7 +75,7 @@ class Constraint extends AbstractConstraint {
 
 class Inequality extends Constraint {
 
-    public function new(a1:Dynamic, a2:Dynamic, a3:Dynamic, a4:Dynamic, a5:Dynamic ) {
+    public function new(a1:Dynamic, a2:Dynamic, a3:Dynamic, ?a4:Dynamic, ?a5:Dynamic ) {
 
         var a1IsExp = Std.is(a1, Expression);
         var a3IsExp = Std.is(a3, Expression);
@@ -85,7 +85,9 @@ class Inequality extends Constraint {
         var a3IsNum = Std.is(a3, Float);
 
         // (cle || number), op, cv
-        if((a1IsExp || a1IsNum) && a3IsNum) {
+        if((a1IsExp || a1IsNum) && a3IsVar) {
+
+            if(a1IsNum) a1 = Expression.from_constant(a1);
             var cle:Expression = a1; var op:Op = a2; var cv:AbstractVariable = a3;
             var _strength:Strength = a4; var _weight:Float = a5;
 
@@ -106,6 +108,7 @@ class Inequality extends Constraint {
         // cv, op, (cle || number)
         if (a1IsVar && (a3IsExp || a3IsNum)) {
 
+            if(a3IsNum) a3 = Expression.from_constant(a3);
             var cle:Expression = a3; var op:Op = a2; var cv:AbstractVariable = a1;
             var _strength:Strength = a4; var _weight:Float = a5;
 
@@ -127,7 +130,7 @@ class Inequality extends Constraint {
         // cle, op, num
 
         if(a1IsExp && a3IsNum) {
-            var cle1:Expression = a1; var op:Op = a2; var cle2:Expression = a3;
+            var cle1:Expression = a1; var op:Op = a2; var cle2:Expression = Expression.from_constant(a3);
             var _strength:Strength = a4; var _weight:Float = a5;
 
             super(cle1.clone(), _strength, _weight);
@@ -149,7 +152,7 @@ class Inequality extends Constraint {
         // num, op, cle
 
         if (a1IsNum && a3IsExp) {
-            var cle1:Expression = a3; var op:Op = a2; var cle2:Expression = a1;
+            var cle1:Expression = a3; var op:Op = a2; var cle2:Expression = Expression.from_constant(a1);
             var _strength:Strength = a4; var _weight:Float = a5;
 
             super(cle1.clone(), _strength, _weight);
