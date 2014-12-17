@@ -22,7 +22,8 @@ class Main extends luxe.Game {
         // new SimplexSolver_test();
         // new Point_test();
         // new Expression_test();
-        new EndToEnd_test();
+        // new EndToEnd_test();
+        new Constraint_test();
 
     } //ready
 

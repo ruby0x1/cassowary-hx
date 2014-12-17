@@ -75,7 +75,7 @@ class Constraint extends AbstractConstraint {
 
 class Inequality extends Constraint {
 
-    public function new(a1:Dynamic, a2:Dynamic, a3:Dynamic, ?a4:Dynamic, ?a5:Dynamic ) {
+    public function new(a1:Dynamic, ?a2:Dynamic, ?a3:Dynamic, ?a4:Dynamic, ?a5:Dynamic ) {
 
         var a1IsExp = Std.is(a1, Expression);
         var a3IsExp = Std.is(a3, Expression);
@@ -224,7 +224,7 @@ class Inequality extends Constraint {
 
 class Equation extends Constraint {
 
-    public function new(a1:Dynamic, a2:Dynamic, ?a3:Dynamic, ?a4:Dynamic) {
+    public function new(a1:Dynamic, ?a2:Dynamic, ?a3:Dynamic, ?a4:Dynamic) {
         if(Std.is(a1, Expression) && (a2 == null || Std.is(a2, Strength))) {
 
             super(a1, a2, a3);
@@ -235,10 +235,10 @@ class Equation extends Constraint {
             super( cle.clone(), a3, a4 );
             expression.add_variable(cv, -1);
 
-        } else if(Std.is(a1, AbstractVariable) && Std.is(a2, Float)) {
+        } else if(Std.is(a1, AbstractVariable) && (Std.is(a2, Float) || Std.is(a2,Int))) {
 
             var cv:AbstractVariable = a1; var val:Float = a2;
-            super(new Expression(new Variable({value:val})), a3, a4);
+            super(new Expression(val), a3, a4);
             expression.add_variable(cv, -1);
 
         } else if(Std.is(a1,Expression) && Std.is(a2, AbstractVariable)) {
