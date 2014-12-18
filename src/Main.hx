@@ -131,7 +131,6 @@ class Main extends luxe.Game {
                 .add_edit_var(db[dbDragging].x)
                 .add_edit_var(db[dbDragging].y)
                 .begin_edit();
-            trace('begin_edit $dbDragging');
         }
     }
 
@@ -139,10 +138,7 @@ class Main extends luxe.Game {
         if(dbDragging != -1) {
             dbDragging = -1;
             solver.end_edit();
-            trace('end_edit');
         }
-
-        trace(Std.string(db));
     }
 
     override function onmousemove(e:MouseEvent){
