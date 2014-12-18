@@ -8,6 +8,7 @@ import luxe.Vector;
 import Variable;
 import Constraint;
 
+
 class Main extends luxe.Game {
 
     var solver:SimplexSolver;
@@ -183,7 +184,7 @@ class Main extends luxe.Game {
     }
 
     override function update(dt) {
-        draw();
+        if(db != null) draw();
     }
 
     override function config( config:luxe.AppConfig ) {

@@ -32,34 +32,36 @@ class Strength_test extends mohxa.Mohxa {
                 });
             });
 
-            it('is sane', function () {
-                var s = new SimplexSolver();
+            describe('is sane', function () {
+                it('should be sane', function () {
+                    var s = new SimplexSolver();
 
-                // x = 10
-                // y = 20
-                // z = x (weak)
-                // z = y (strong)
-                // z == 20
+                    // x = 10
+                    // y = 20
+                    // z = x (weak)
+                    // z = y (strong)
+                    // z == 20
 
-                var x = new Variable({ name: 'x' });
-                var y = new Variable({ name: 'y' });
-                var z = new Variable({ name: 'z' });
+                    var x = new Variable({ name: 'x' });
+                    var y = new Variable({ name: 'y' });
+                    var z = new Variable({ name: 'z' });
 
-                s.add_constraint(new Equation(z, x, Strength.weak))
-                .add_constraint(new Equation(z, y, Strength.strong));
+                    s.add_constraint(new Equation(z, x, Strength.weak))
+                    .add_constraint(new Equation(z, y, Strength.strong));
 
-                s.add_stay(x)
-                .add_stay(y)
-                .add_edit_var(x)
-                .add_edit_var(y).begin_edit();
+                    s.add_stay(x)
+                     .add_stay(y)
+                     .add_edit_var(x)
+                     .add_edit_var(y).begin_edit();
 
-                s.suggest_value(x, 10)
-                .suggest_value(y, 20).resolve();
-                s.end_edit();
+                    s.suggest_value(x, 10)
+                     .suggest_value(y, 20).resolve();
+                    s.end_edit();
 
-                equal(true, C.approx(x.value, 10.0), 'x.value = 10.0');
-                equal(true, C.approx(y.value, 20.0), 'y.value = 20.0');
-                equal(true, C.approx(z.value, 20.0), 'z.value = 30.0');
+                    equal(true, C.approx(x.value, 10.0), 'x.value = 10.0');
+                    equal(true, C.approx(y.value, 20.0), 'y.value = 20.0');
+                    equal(true, C.approx(z.value, 20.0), 'z.value = 30.0');
+                });
             });
 
             describe('multiple stays/edits', function () {

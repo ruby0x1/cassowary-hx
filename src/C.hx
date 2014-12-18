@@ -11,7 +11,7 @@ class C {
         #if js
             untyped console.log(''+v);
         #else
-            Sys.print(v);
+            Sys.println(v);
         #end
     }
 

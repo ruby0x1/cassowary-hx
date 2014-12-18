@@ -14,11 +14,11 @@ class SimplexSolver extends Tableau {
 
     var stay_minus_error_vars : Array<AbstractVariable>;
     var stay_plus_error_vars : Array<AbstractVariable>;
-    var error_vars:Map<AbstractConstraint, Array<AbstractVariable>>;
-    var marker_vars:Map<AbstractConstraint, AbstractVariable>;
+    var error_vars:OrderedMap<AbstractConstraint, Array<AbstractVariable>>;
+    var marker_vars:OrderedMap<AbstractConstraint, AbstractVariable>;
 
     var objective:ObjectiveVariable;
-    var edit_var_map:Map<AbstractVariable, EditInfo>;
+    var edit_var_map:OrderedMap<AbstractVariable, EditInfo>;
     var edit_var_list:Array<{v:AbstractVariable, info:EditInfo}>;
     var edit_var_stack:Array<Int>;
 
@@ -33,11 +33,11 @@ class SimplexSolver extends Tableau {
         stay_plus_error_vars = [];
         stay_minus_error_vars = [];
         changed = [];
-        error_vars = new Map();
-        marker_vars = new Map();
+        error_vars = new OrderedMap( new Map() );
+        marker_vars = new OrderedMap(  new Map() );
 
         objective = new ObjectiveVariable({name:"Z"});
-        edit_var_map = new Map();
+        edit_var_map = new OrderedMap( new Map() );
         edit_var_list = [];
 
         rows.set(objective, Expression.empty());

@@ -1,16 +1,17 @@
 
 import Variable;
+import Map;
 
 class Expression {
 
     public var is_constant (get,never):Bool;
     function get_is_constant() return Lambda.count(terms) == 0;
 
-    public var terms : Map<AbstractVariable, Float>;
+    public var terms : OrderedMap<AbstractVariable, Float>;
 
     public var constant : Float = 0.0;
     public function new( ?cvar:Dynamic, ?_value:Float=1.0, ?_constant:Float=0.0) {
-        terms = new Map();
+        terms = new OrderedMap( new Map() );
         constant = _constant;
 
         if(cvar != null) {
@@ -28,13 +29,14 @@ class Expression {
         }
     }
 
-    public function init_from_hash(_constant:Float, t:Map<AbstractVariable, Float>) {
+    public function init_from_hash(_constant:Float, t:IMap<AbstractVariable, Float>) {
         C.logv("*******************************");
         C.logv("clone c.initializeFromHash");
         C.logv("*******************************");
 
+        terms = null;
         constant = _constant;
-        terms = new Map();
+        terms = new OrderedMap( new Map<AbstractVariable, Float>() );
         for(v in t.keys()) terms.set(v, t.get(v));
         return this;
     }
@@ -199,7 +201,7 @@ class Expression {
         return reciprocal;
     }
 
-    public function terms_equals(other:Map<AbstractVariable, Float>) {
+    public function terms_equals(other:IMap<AbstractVariable, Float>) {
         if(terms == other) return true;
         if( Lambda.count(terms) != Lambda.count(other)) return false;
         for(clv in terms.keys()) {

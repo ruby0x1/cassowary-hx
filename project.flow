@@ -16,8 +16,7 @@
 
     build : {
       dependencies : {
-        luxe : '*',
-        mohxa : '*'
+        luxe : '*'
       }
     },
 
