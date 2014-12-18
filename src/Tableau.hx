@@ -76,7 +76,6 @@ class Tableau  {
         expr.each(function(clv, coeff) {
             insert_column_var(clv, aVar);
             if(clv.is_external) {
-                trace('');
                 this.external_parametric_vars.push(clv);
             }
         });

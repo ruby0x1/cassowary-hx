@@ -1,4 +1,3 @@
-package tests;
 
 import Constraint;
 import Variable;

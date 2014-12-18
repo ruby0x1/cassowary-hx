@@ -1,4 +1,3 @@
-package tests;
 
 class Point_test extends mohxa.Mohxa {
 

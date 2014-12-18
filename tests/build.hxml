@@ -1,0 +1,6 @@
+-main Tests
+#-cpp cpp
+-neko tests.n
+-cmd neko tests.n
+-lib mohxa
+-cp ../src

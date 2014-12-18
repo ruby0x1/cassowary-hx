@@ -1,4 +1,3 @@
-package tests;
 
 import SimplexSolver;
 import Constraint;
