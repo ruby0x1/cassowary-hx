@@ -1,0 +1,6 @@
+-main ParseTest
+-neko exprs.n
+-lib hxparse
+-cmd neko exprs.n
+-cp ./
+-cp ../src/
