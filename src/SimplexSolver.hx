@@ -421,6 +421,7 @@ class SimplexSolver extends Tableau {
         if(!C.approx(az_tableau_row.constant, 0)) {
             remove_row(az);
             remove_column(av);
+            trace('error source : ' + expr);
             throw Error.RequiredFailure;
         }
 

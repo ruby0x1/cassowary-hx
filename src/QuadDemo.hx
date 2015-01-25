@@ -9,7 +9,7 @@ import Variable;
 import Constraint;
 
 
-class Main extends luxe.Game {
+class QuadDemo extends luxe.Game {
 
     var solver:SimplexSolver;
     var dbDragging:Int = -1;
@@ -191,7 +191,7 @@ class Main extends luxe.Game {
     } //config
 
 
-} //Main
+} //QuadDemo
 
 class DraggableBox {
     public var x (get,null) : Variable;

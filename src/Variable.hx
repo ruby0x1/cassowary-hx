@@ -54,12 +54,12 @@ abstract Variable(CVariable) from CVariable to CVariable {
     }
 
     @:from
-    static public function fromFloat(f:Float) {
+    static function fromFloat(f:Float) {
         return new CVariable({ value:f, _ff:true });
     }
 
     @:to
-    public function toFloat() : Float {
+    function toFloat() : Float {
         return this.value;
     }
 }
