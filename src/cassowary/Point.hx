@@ -1,4 +1,6 @@
+package cassowary;
 
+import cassowary.Variable;
 
 class Point {
 

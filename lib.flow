@@ -1,0 +1,10 @@
+{
+  project : {
+    name : 'cassowary.hx',
+    version : '1.0.0',
+    author : 'underscorediscovery',
+    app:{
+        codepaths:['src']
+    }
+  }
+}

@@ -1,4 +1,4 @@
-
+package cassowary;
 
 class Strength {
 

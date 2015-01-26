@@ -1,3 +1,5 @@
+package cassowary;
+
 import Map;
 
 
@@ -18,7 +20,7 @@ class OrderedMapIterator<K,V> {
 class OrderedMap<K, V> implements IMap<K, V> {
 
     var map:Map<K, V>;
-    @:allow(OrderedMapIterator)
+    @:allow(cassowary.OrderedMapIterator)
     var _keys:Array<K>;
     var idx = 0;
 

@@ -1,6 +1,7 @@
+package cassowary;
 
-import Variable;
-import Constraint;
+import cassowary.Variable;
+import cassowary.Constraint;
 
 typedef EditInfoArgs = {
     var constraint:AbstractConstraint;

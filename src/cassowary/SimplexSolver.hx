@@ -1,8 +1,8 @@
+package cassowary;
 
-
-import Tableau;
-import Variable;
-import Constraint;
+import cassowary.Tableau;
+import cassowary.Variable;
+import cassowary.Constraint;
 
 
 typedef ChangeInfo = {name:String, c:Float};

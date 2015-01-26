@@ -1,6 +1,7 @@
+package cassowary;
 
-import Expression;
-import Variable;
+import cassowary.Expression;
+import cassowary.Variable;
 
 class C {
 

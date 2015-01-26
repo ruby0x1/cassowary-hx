@@ -1,4 +1,4 @@
-
+package cassowary;
 
 class Error {
     public static var ConstraintNotFound =

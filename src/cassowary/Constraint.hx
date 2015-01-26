@@ -1,7 +1,7 @@
+package cassowary;
 
-
-import Strength;
-import Variable;
+import cassowary.Strength;
+import cassowary.Variable;
 
 @:enum
 abstract Op(Int) from Int to Int {

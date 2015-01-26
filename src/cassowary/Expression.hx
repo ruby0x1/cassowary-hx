@@ -1,5 +1,6 @@
+package cassowary;
 
-import Variable;
+import cassowary.Variable;
 import Map;
 
 class Expression {

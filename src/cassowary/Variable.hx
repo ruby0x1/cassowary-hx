@@ -1,4 +1,4 @@
-
+package cassowary;
 
 typedef VariableArgs = {
     ? name : String,
