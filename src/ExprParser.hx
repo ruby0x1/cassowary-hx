@@ -3,6 +3,7 @@ enum ExprToken {
     TIdent(v:String);
     TConstant(v:String);
     TOp(v:ExprOp);
+    TIeq(v:ExprIeq);
 
     TBrOpen;
     TBrClose;
@@ -16,18 +17,18 @@ enum ExprOp {
     add;
 }
 
+enum ExprIeq {
+    leq;
+    geq;
+}
+
 enum Exp {
     EConstant(v:Float);
     EIdent(i:String);
     EBinop(op:ExprOp, lhs:Exp, rhs:Exp);
+    EInequality(op:ExprIeq, rhs:Exp);
     EPar(e:Exp);
     ENeg(e:Exp);
-}
-
-typedef BaseExpr = {
-    var LHS:ExprToken;
-    var RHS:ExprToken;
-    var OP:ExprOp;
 }
 
 class ExprLexer extends hxparse.Lexer implements hxparse.RuleBuilder {
@@ -39,6 +40,8 @@ class ExprLexer extends hxparse.Lexer implements hxparse.RuleBuilder {
         "[/]" => TOp(ExprOp.div),
         "[\\-]" => TOp(ExprOp.sub),
         "[+]" => TOp(ExprOp.add),
+        "(<=)" => TIeq(ExprIeq.leq),
+        "(>=)" => TIeq(ExprIeq.geq),
 
         "[\r\n\t ]" => lexer.token(tok),
         "-?(([1-9][0-9]*)|0)(.[0-9]+)?([eE][\\+\\-]?[0-9]?)?" => TConstant(lexer.current),
@@ -115,6 +118,8 @@ class ExprParser extends hxparse.Parser<hxparse.LexerTokenSource<ExprToken>, Exp
                 parse_next(EConstant(Std.parseFloat(v)));
             case [TIdent(i)]:
                 parse_next(EIdent(i));
+            case [TIeq(ieq), rhs = parse()]:
+                EInequality(ieq, rhs);
             case [TBrOpen, e = parse(), TBrClose]:
                 parse_next(EPar(e));
             case [TOp(sub), e = parse()]:
