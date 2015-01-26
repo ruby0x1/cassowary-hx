@@ -31,20 +31,15 @@ class Main extends luxe.Game {
             solver.add_stay(screen.w);
             solver.add_stay(screen.h);
 
-        var x_expr = parse_expr('(screen.w/2) - (canvas.w/2)');
-        var y_expr = parse_expr('screen.y + 20');
-        var width_expr = parse_expr('screen.w * 0.8');
-        var height_expr = parse_expr('screen.h * 0.2');
 
-            //set size
-        solver.add_constraint(new Equation(canvas.w, width_expr));
-        solver.add_constraint(new Equation(canvas.h, height_expr));
-            //center to 'screen'
-        solver.add_constraint(new Equation(canvas.x, x_expr));
-        solver.add_constraint(new Equation(canvas.y, y_expr));
-            // max size
-        solver.add_constraint(new Inequality(canvas.w, Op.GEQ, 128));
-        solver.add_constraint(new Inequality(canvas.h, Op.GEQ, 128, Strength.weak));
+        constrain(canvas.x, '(screen.w/2) - (canvas.w/2)');
+        constrain(canvas.y, 'screen.y + 20');
+
+        constrain(canvas.w, 'screen.w * 0.8');
+        constrain(canvas.h, 'screen.h * 0.2');
+
+        constrain(canvas.w, '>= 128');
+        constrain(canvas.h, '>= 128');
 
     }
 
@@ -77,38 +72,45 @@ class Main extends luxe.Game {
 
     }
 
-    function eval(e:Exp):Expression {
-        return switch(e) {
-            case EConstant(f):
-                Expression.from_constant(f);
-            case EIdent(f):
-                Expression.from_variable(find_var(f));
-            case EBinop(op, lhs, rhs):
-                switch(op) {
-                    case add:
-                        var e = Expression.empty();
-                            e = e.add_expr(eval(lhs));
-                            e.plus(eval(rhs));
-                    case sub:
-                        var e = Expression.empty();
-                            e = e.add_expr(eval(lhs));
-                            e.minus(eval(rhs));
-                    case mul:
-                        var e = Expression.empty();
-                            e = e.add_expr(eval(lhs));
-                            e.times(eval(rhs));
-                    case div:
-                        var e = Expression.empty();
-                            e = e.add_expr(eval(lhs));
-                            e.divide(eval(rhs));
-                }
-            case EPar(e):
-                eval(e);
-            case ENeg(e):
-                var exp = eval(e);
-                exp.multiply_me(-1);
+    function constrain( v:Variable, expr:String, ?strength:Strength, ?weight:Float ) {
+        var parsed = new ExprParser(expr).parse();
+        var e = eval(parsed);
+        if(e.op != null) {
+            solver.add_constraint(new Inequality(v, e.op, e.expr, strength, weight));
+        } else {
+            solver.add_constraint(new Equation(v, e.expr, strength, weight));
         }
-    }
+    } //constrain
+
+    function eval(e:Exp):{ expr:Expression, ?op:Op } {
+        return switch(e) {
+
+            case EPar(e):       eval(e);
+            case EConstant(f):  { expr: Expression.from_constant(f) }
+            case EIdent(f):     { expr: Expression.from_variable(find_var(f)) }
+            case ENeg(e):       { expr: eval(e).expr.multiply_me(-1) }
+
+            case EInequality(op, rhs): {
+                var rhs = eval(rhs);
+                switch(op) {
+                    case leq:   { op:Op.LEQ, expr:rhs.expr }
+                    case geq:   { op:Op.GEQ, expr:rhs.expr }
+                }
+            } //ineqaulity operator
+
+            case EBinop(op, lhs, rhs): {
+                var lhs_e = eval(lhs).expr;
+                var rhs_e = eval(rhs).expr;
+                trace('lhs $lhs_e $op $rhs_e');
+                switch(op) {
+                    case add: { expr:Expression.from_expr(lhs_e).plus(rhs_e) }
+                    case sub: { expr:Expression.from_expr(lhs_e).minus(rhs_e) }
+                    case mul: { expr:Expression.from_expr(lhs_e).times(rhs_e) }
+                    case div: { expr:Expression.from_expr(lhs_e).divide(rhs_e) }
+                }
+            } //binary operator
+        } //switch(e)
+    } //eval
 
     function find_var(name:String) : Variable {
         var res = cast CVariable.map.get(name);
@@ -119,6 +121,14 @@ class Main extends luxe.Game {
 
     function parse_expr( expr:String ) {
         return eval(new ExprParser(expr).parse());
+    }
+
+    override function config(config:luxe.AppConfig) {
+
+        config.window.width = 700;
+        config.window.height = 467;
+
+        return config;
     }
 
 } //Main
