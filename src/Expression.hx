@@ -272,6 +272,7 @@ class Expression {
     }
 
     public static function empty(){ return new Expression(null, 1, 0); }
+    public static function from_expr(e:Dynamic){ return new Expression(null, 1, 0).add_expr(e); }
     public static function from_constant(cons:Float){ return new Expression(null,0,cons); }
     public static function from_value(v:Float){ return new Expression(null, v, 0); }
     public static function from_variable(v:Variable){ return new Expression(v,1,0); }
