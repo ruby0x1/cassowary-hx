@@ -29,7 +29,7 @@ class OrderedMap<K, V> implements IMap<K, V> {
        map = _map;
     }
 
-    public inline function set(key, value) {
+    public inline function set(key:K, value:V) {
         if(_keys.indexOf(key) == -1) _keys.push(key);
         map[key] = value;
     }
