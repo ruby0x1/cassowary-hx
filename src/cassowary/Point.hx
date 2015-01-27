@@ -19,6 +19,6 @@ class Point {
         if(y._ff) y.name = 'y'+suffix;
     }
 
-    function toString() return '[$x, $y]';
+    inline function toString() return '[$x, $y]';
 
 } //Point

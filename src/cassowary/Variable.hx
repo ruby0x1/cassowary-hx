@@ -4,7 +4,7 @@ typedef VariableArgs = {
     ? name : String,
     ? prefix : String,
     ? value : Float,
-    ? _ff:Bool
+    ? __ff:Bool
 }
 
 class AbstractVariable {
@@ -26,18 +26,21 @@ class AbstractVariable {
     @:noCompletion
     public var _ff: Bool = false;
 
-    public function new( ?args:VariableArgs ) {
+    public inline function new(
+        ? _name:String,
+        ? _val:Float,
+        ? _prefix:String,
+        ? __ff:Bool
+    ) {
         //name defaults to a hash id then,
         //and in subclasses is prefixed before calling super
         hashcode = C.inc();
         name += hashcode;
 
-        if(args != null) {
-            if(args.name != null)   name = args.name;
-            if(args.prefix != null) prefix = args.prefix;
-            if(args.value != null)  value = args.value;
-            if(args._ff != null)  _ff = args._ff;
-        }
+        if(_name != null) name = _name;
+        if(_prefix != null) prefix = _prefix;
+        if(_val != null) value = _val;
+        if(__ff != null) _ff = __ff;
     }
 
     function toString() {
@@ -49,13 +52,18 @@ class AbstractVariable {
 @:forward(prefix, name, value, val, is_dummy, is_external, is_pivotable, is_restricted, _value, _ff)
 abstract Variable(CVariable) from CVariable to CVariable {
 
-    public inline function new(?args:VariableArgs) {
-        this = new CVariable(args);
+    public inline function new(
+        ? _name:String,
+        ? _val:Float,
+        ? _prefix:String,
+        ? __ff:Bool
+    ) {
+        this = new CVariable(_name,_val,_prefix,__ff);
     }
 
     @:from
     static function fromFloat(f:Float) {
-        return new CVariable({ value:f, _ff:true });
+        return new CVariable(f,true);
     }
 
     @:to
@@ -69,10 +77,15 @@ class CVariable extends AbstractVariable {
     @:noCompletion
     public static var map: Map<String, AbstractVariable> = new Map();
 
-    public function new( ?args:VariableArgs ) {
+    public inline function new(
+        ? _name:String,
+        ? _val:Float,
+        ? _prefix:String,
+        ? __ff:Bool
+    ) {
         name = 'v';
 
-        super( args );
+        super( _name,_val,_prefix,__ff );
 
         is_external = true;
 
@@ -83,10 +96,15 @@ class CVariable extends AbstractVariable {
 
 class DummyVariable extends AbstractVariable {
 
-    public function new( ?args:VariableArgs ) {
+    public inline function new(
+        ? _name:String,
+        ? _val:Float,
+        ? _prefix:String,
+        ? __ff:Bool
+    ) {
         name = 'd';
 
-        super( args );
+        super( _name,_val,_prefix,__ff );
 
         is_dummy = true;
         is_restricted = true;
@@ -97,10 +115,15 @@ class DummyVariable extends AbstractVariable {
 
 class ObjectiveVariable extends AbstractVariable {
 
-    public function new( ?args:VariableArgs ) {
+    public inline function new(
+        ? _name:String,
+        ? _val:Float,
+        ? _prefix:String,
+        ? __ff:Bool
+    ) {
         name = 'o';
 
-        super( args );
+        super( _name,_val,_prefix,__ff );
 
         _value = 'obj';
     }
@@ -109,10 +132,15 @@ class ObjectiveVariable extends AbstractVariable {
 
 class SlackVariable extends AbstractVariable {
 
-    public function new( ?args:VariableArgs ) {
+    public inline function new(
+        ? _name:String,
+        ? _val:Float,
+        ? _prefix:String,
+        ? __ff:Bool
+    ) {
         name = 's';
 
-        super( args );
+        super( _name,_val,_prefix,__ff );
 
         is_pivotable = true;
         is_restricted = true;

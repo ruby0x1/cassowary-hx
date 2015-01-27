@@ -31,9 +31,9 @@ class Expression {
     }
 
     public function init_from_hash(_constant:Float, t:IMap<AbstractVariable, Float>) {
-        C.logv("*******************************");
-        C.logv("clone c.initializeFromHash");
-        C.logv("*******************************");
+        cassowary.Log._verbose("*******************************");
+        cassowary.Log._verbose("clone c.initializeFromHash");
+        cassowary.Log._verbose("*******************************");
 
         terms = null;
         constant = _constant;
@@ -42,35 +42,35 @@ class Expression {
         return this;
     }
 
-    public function each(cb:AbstractVariable->Float->Void) {
-        for(clv in terms.keys()) {
-            var coeff = terms.get(clv);
-            cb(clv, coeff);
-        }
-    }
+    // public inline function each(cb:AbstractVariable->Float->Void) {
+    //     for(clv in terms.keys()) {
+    //         var coeff = terms.get(clv);
+    //     }
+    // }
 
-    public function multiply_me(x:Float) {
+    public inline function multiply_me(x:Float) {
         constant *= x;
-        each(function(clv:AbstractVariable, coeff:Float){
+
+        for(clv in terms.keys()) {
+            var coeff : Float= terms.get(clv);
             terms.set(clv, coeff * x);
-        });
+        }
+
         return this;
+    } //multiply_me
+
+    public inline function clone() {
+        cassowary.Log._verbose("*******************************");
+        cassowary.Log._verbose("clone c.Expression");
+        cassowary.Log._verbose("*******************************");
+        return Expression.empty().init_from_hash(constant, terms);
     }
 
-    public function clone() {
-        C.logv("*******************************");
-        C.logv("clone c.Expression");
-        C.logv("*******************************");
-
-        var e = Expression.empty();
-        return e.init_from_hash(constant, terms);
-    }
-
-    public function timesf(x:Float) {
+    public inline function timesf(x:Float) {
         return clone().multiply_me(x);
     }
 
-    public function times(x:Expression) {
+    public inline function times(x:Expression) {
         if(is_constant) {
             return x.timesf(constant);
         } else if(x.is_constant) {
@@ -80,33 +80,33 @@ class Expression {
         }
     }
 
-    public function plus(expr:Expression) {
+    public inline function plus(expr:Expression) {
         return clone().add_expr(expr,1);
     }
 
-    public function plusv(cvar:Variable) {
+    public inline function plusv(cvar:Variable) {
         return clone().add_variable(cvar, 1);
     }
 
-    public function minus(expr:Expression) {
+    public inline function minus(expr:Expression) {
         return clone().add_expr(expr,-1);
     }
 
-    public function minusv(cvar:Variable) {
+    public inline function minusv(cvar:Variable) {
         return clone().add_variable(cvar, -1);
     }
 
-    public function dividef(x:Float) {
+    public inline function dividef(x:Float) {
         if(C.approx(x,0)) throw Error.NonExpression;
         return timesf(1/x);
     }
 
-    public function divide(x:Expression) {
+    public inline function divide(x:Expression) {
         if(!x.is_constant) throw Error.NonExpression;
         return timesf(1/x.constant);
     }
 
-    public function add_expr(expr:Dynamic, n:Float=1, ?subject:AbstractVariable, ?solver:Tableau) {
+    public inline function add_expr(expr:Dynamic, n:Float=1, ?subject:AbstractVariable, ?solver:Tableau) {
 
         var _expr:Expression = null;
         if(Std.is(expr, AbstractVariable)) {
@@ -116,10 +116,14 @@ class Expression {
         }
 
         constant += (n * _expr.constant);
-        _expr.each(function(clv, coeff){
+
+        for(clv in _expr.terms.keys()) {
+            var coeff = _expr.terms.get(clv);
             add_variable(clv, coeff*n, subject, solver);
-        });
+        }
+
         return this;
+
     }
 
     public function add_variable(v:AbstractVariable, cd:Float=1.0, ?subject:AbstractVariable, ?solver:Tableau) {
@@ -146,12 +150,12 @@ class Expression {
         return this;
     }
 
-    public function set_variable(v:AbstractVariable, c:Float) {
+    public inline function set_variable(v:AbstractVariable, c:Float) {
         terms.set(v, c);
         return this;
     }
 
-    public function any_pivotable_variable() {
+    public inline function any_pivotable_variable() {
         if(is_constant) throw "Expression: any_pivotable_variable called on a constant";
 
         var rv = null;
@@ -166,13 +170,15 @@ class Expression {
 
     } //any_pivotable_variable
 
-    public function substitute_out(outvar:AbstractVariable, expr:Expression, ?subject:AbstractVariable, ?solver:Tableau) {
+    public inline function substitute_out(outvar:AbstractVariable, expr:Expression, ?subject:AbstractVariable, ?solver:Tableau) {
 
         var multiplier = terms.get(outvar);
         terms.remove(outvar);
         constant += (multiplier * expr.constant);
 
-        expr.each(function(clv, coeff){
+        for(clv in expr.terms.keys()) {
+            var coeff = expr.terms.get(clv);
+
             var old_coeff = terms.get(clv);
             if(old_coeff != null) {
                 var new_coeff = old_coeff + multiplier * coeff;
@@ -188,8 +194,9 @@ class Expression {
                     solver.note_added(clv, subject);
                 }
             }
-        });
-    }
+        } //each expr.terms.keys
+
+    } //
 
     public function change_subject(old_subject:AbstractVariable, nsubj:AbstractVariable) {
         set_variable(old_subject, new_subject(nsubj));
@@ -218,7 +225,8 @@ class Expression {
     public function str() {
         return '{ constant: $constant, size:${Lambda.count(terms)}, terms: ${Std.string(terms)} }';
     }
-    function toString() {
+
+    inline function toString() {
 
         var bstr = '';
         var needsplus = false;
@@ -230,11 +238,14 @@ class Expression {
                 needsplus = true;
             }
         }
-        each(function(clv,coeff){
+
+        for(clv in terms.keys()) {
+            var coeff = terms.get(clv);
             if(needsplus) bstr += ' + ';
             bstr += coeff + '*' + clv.value;
             needsplus = true;
-        });
+        }
+
         return bstr;
     }
 

@@ -38,16 +38,16 @@ class Tableau  {
         external_parametric_vars = [];      C.inc();
     }
 
-    public function note_removed( v:AbstractVariable, subject:AbstractVariable ) {
-        C.log("noteRemovedVariable:  " + v + ' ' + subject);
+    public inline function note_removed( v:AbstractVariable, subject:AbstractVariable ) {
+        cassowary.Log._debug("noteRemovedVariable:  " + v + ' ' + subject);
         var col = columns.get(v);
         if(col != null) {
             col.remove(subject);
         }
     }
 
-    public function note_added( v:AbstractVariable, subject:AbstractVariable ) {
-        C.log("noteAddedVariable: " + v + ' ' + subject);
+    public inline function note_added( v:AbstractVariable, subject:AbstractVariable ) {
+        cassowary.Log._debug("noteAddedVariable: " + v + ' ' + subject);
         if(subject != null) {
             insert_column_var(v, subject);
         }
@@ -57,7 +57,7 @@ class Tableau  {
         // Convenience function to insert a variable into
         // the set of rows stored at columns[param_var],
         // creating a new set if needed
-    function insert_column_var( param_var:AbstractVariable, rowvar: AbstractVariable ) {
+    inline function insert_column_var( param_var:AbstractVariable, rowvar: AbstractVariable ) {
 
         var rowset = columns.get(param_var);
         if(rowset == null) {
@@ -70,28 +70,28 @@ class Tableau  {
 
     function add_row(aVar:AbstractVariable, expr:Expression) {
 
-        C.fnenter("addRow: " + (aVar.val) + ", " + expr);
+        cassowary.Log._debug("*addRow: " + (aVar.val) + ", " + expr);
 
         rows.set(aVar, expr);
 
-        expr.each(function(clv, coeff) {
+        for(clv in expr.terms.keys()) {
             insert_column_var(clv, aVar);
             if(clv.is_external) {
                 this.external_parametric_vars.push(clv);
             }
-        });
+        }
 
         if(aVar.is_external) {
             this.external_rows.push(aVar);
         }
 
-        C.logv(this);
+        cassowary.Log._verbose(this);
 
     } //add_row
 
     function remove_column(aVar: AbstractVariable) {
 
-        C.fnenter("removeColumn:" + aVar.val);
+        cassowary.Log._debug("*removeColumn:" + aVar.val);
 
         var _rows = this.columns.get(aVar);
         if(_rows != null) {
@@ -101,7 +101,7 @@ class Tableau  {
                 expr.terms.remove(aVar);
             } //for
         } else {
-            C.log('Could not find var $aVar in columns');
+            cassowary.Log._debug('Could not find var $aVar in columns');
         }
 
         if(aVar.is_external) {
@@ -117,18 +117,18 @@ class Tableau  {
 
     function remove_row( aVar:AbstractVariable ) {
 
-        C.fnenter("removeRow:" + aVar);
+        cassowary.Log._debug("*removeRow:" + aVar);
 
         var expr = rows.get(aVar);
         if(expr == null) throw "null expression";
 
-        expr.each(function(clv, coeff) {
+        for(clv in expr.terms.keys()) {
             var varset = columns.get(clv);
             if (varset != null) {
-                C.log("removing from varset: " + aVar);
+                cassowary.Log._debug("removing from varset: " + aVar);
                 varset.remove(aVar);
             }
-        });
+        }
 
         this.infeasible_rows.remove(aVar);
         if(aVar.is_external) {
@@ -137,7 +137,7 @@ class Tableau  {
 
         rows.remove(aVar);
 
-        C.fnexit("returning " + expr);
+        cassowary.Log._debug("-returning " + expr);
 
         return expr;
 
@@ -145,8 +145,8 @@ class Tableau  {
 
     function substitute_out( oldvar:AbstractVariable, expr:Expression ) {
 
-        C.fnenter("substituteOut:" + oldvar.val + ", " + expr);
-        C.logv(this);
+        cassowary.Log._debug("*substituteOut:" + oldvar.val + ", " + expr);
+        cassowary.Log._verbose(this);
 
         var varset = columns.get(oldvar);
         for(v in varset) {

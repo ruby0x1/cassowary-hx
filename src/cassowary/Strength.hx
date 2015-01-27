@@ -6,7 +6,7 @@ class Strength {
     public var is_required(get,never): Bool;
     public var name:String = '';
 
-    public function new( _name:String, s:Dynamic, ?w2:Float, ?w3:Float) {
+    public inline function new( _name:String, s:Dynamic, ?w2:Float, ?w3:Float) {
 
         name = _name;
 
@@ -17,11 +17,11 @@ class Strength {
         }
     }
 
-    function get_is_required() {
+    inline function get_is_required() {
         return this == Strength.required;
     }
 
-    function toString() {
+    inline function toString() {
         return '$name' + (!is_required ? (':$symbolic_weight') : '');
     }
 

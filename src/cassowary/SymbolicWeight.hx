@@ -5,7 +5,7 @@ class SymbolicWeight {
     public var value : Float = 0.0;
     public var multiplier : Float = 1000;
 
-    public function new( ?weights:Array<Float> ) {
+    public inline function new( ?weights:Array<Float> ) {
         var factor = 1.0;
         if(weights == null) weights = [];
 
@@ -17,6 +17,6 @@ class SymbolicWeight {
         }
     }
 
-    function toString() return '$value';
+    inline function toString() return '$value';
 
 } //SymbolicWeight
