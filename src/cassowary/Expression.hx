@@ -76,6 +76,7 @@ class Expression {
         } else if(x.is_constant) {
             return timesf(x.constant);
         } else {
+            trace('source: $x');
             throw Error.NonExpression;
         }
     }
@@ -97,12 +98,12 @@ class Expression {
     }
 
     public inline function dividef(x:Float) {
-        if(C.approx(x,0)) throw Error.NonExpression;
+        if(C.approx(x,0)) { trace('divide by zero: $x'); throw Error.NonExpression;}
         return timesf(1/x);
     }
 
     public inline function divide(x:Expression) {
-        if(!x.is_constant) throw Error.NonExpression;
+        if(!x.is_constant) { trace('divide by non-constant source: $x'); throw Error.NonExpression; }
         return timesf(1/x.constant);
     }
 
