@@ -1,7 +1,9 @@
 
-import SimplexSolver;
-import Constraint;
-import Variable;
+import cassowary.SimplexSolver;
+import cassowary.Constraint;
+import cassowary.Variable;
+import cassowary.Strength;
+import cassowary.C;
 
 class SimplexSolver_test extends mohxa.Mohxa {
 
@@ -19,7 +21,7 @@ class SimplexSolver_test extends mohxa.Mohxa {
             it("works with required strength", function() {
 
                 var solver = new SimplexSolver();
-                var a = new Variable({ name: "a" });
+                var a = new Variable('a');
 
                 solver.add_constraint(new StayConstraint(a, Strength.strong, 0));
                 solver.resolve();
@@ -38,8 +40,8 @@ class SimplexSolver_test extends mohxa.Mohxa {
             it("works with required strength after many suggestions", function() {
 
                 var solver = new SimplexSolver();
-                var a = new Variable({ name: "a" });
-                var b = new Variable({ name: "b" });
+                var a = new Variable('a');
+                var b = new Variable('b');
 
                 solver.add_constraint(new StayConstraint(a, Strength.strong, 0))
                       .add_constraint(new Equation(a,b,Strength.required))
@@ -66,8 +68,8 @@ class SimplexSolver_test extends mohxa.Mohxa {
 
             it('works with weight', function () {
 
-                var x = new Variable({ name: 'x' });
-                var y = new Variable({ name: 'y' });
+                var x = new Variable('x');
+                var y = new Variable('y');
                 var solver = new SimplexSolver();
 
                 solver.add_stay(x).add_stay(y)

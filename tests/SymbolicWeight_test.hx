@@ -1,5 +1,5 @@
 
-import SymbolicWeight;
+import cassowary.SymbolicWeight;
 
 class SymbolicWeight_test extends mohxa.Mohxa {
 

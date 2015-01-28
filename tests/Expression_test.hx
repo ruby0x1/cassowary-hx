@@ -1,6 +1,7 @@
 
-import Expression;
-import Variable;
+import cassowary.Expression;
+import cassowary.Variable;
+import cassowary.C;
 
 class Expression_test extends mohxa.Mohxa {
 
@@ -10,7 +11,7 @@ class Expression_test extends mohxa.Mohxa {
 
         describe('Expression', function () {
             it('is constructable with 3 variables as arguments', function () {
-                var x = new Variable({ name: 'x', value: 167 });
+                var x = new Variable('x',167);
                 var e = new Expression(x, 2, 3);
                 equal(e+'', '3 + 2*167', 'constructed with x, 2, 3');
             });
@@ -20,28 +21,28 @@ class Expression_test extends mohxa.Mohxa {
             });
 
             it('plus', function () {
-                var x = new Variable({ name: 'x', value: 167 });
+                var x = new Variable('x',167);
                 equal(C.plus(4, 2)+'', '6', 'plus(4,2) = 6');
                 equal(C.plus(x, 2)+'', '2 + 1*167', 'plus(x,2) = 2 + 1*167');
                 equal(C.plus(3, x)+'', '3 + 1*167', 'plus(3,x) = 3 + 1*167');
             });
 
             it('plus_solve', function () {
-                var x = new Variable({ name: 'x', value: 167 });
+                var x = new Variable('x',167);
                 equal(C.plus(4, 2)+'', '6', 'plus(4,2) = 6');
                 equal(C.plus(x, 2)+'', '2 + 1*167', 'plus(x,2) = 2 + 1*167');
                 equal(C.plus(3, x)+'', '3 + 1*167', 'plus(3,x) = 3 + 1*167');
             });
 
             it('times', function () {
-                var x = new Variable({ name: 'x', value: 167 });
+                var x = new Variable('x',167);
                 equal(C.times(x, 3)+'', '3*167', 'times(x,3) = 3*167');
                 equal(C.times(7, x)+'', '7*167', 'times(7,x) = 7*167');
             });
 
             it('complex', function () {
-                var x = new Variable({ name: 'x', value: 167 });
-                var y = new Variable({ name: 'y', value: 2 });
+                var x = new Variable('x',167);
+                var y = new Variable('y',2);
                 var ex = C.plus(4, C.plus(C.times(x, 3), C.times(2, y)));
                 equal(ex+'', '4 + 3*167 + 2*2', '(4 + (x*3)+(2*y)) = 4 + 3*167 + 2*2');
             });
@@ -59,7 +60,7 @@ class Expression_test extends mohxa.Mohxa {
             });
 
             it('one_variable', function () {
-                var v = new Variable({ value: 10 });
+                var v = new Variable(10);
                 var exp = new Expression(v);
                 equal(0.0, exp.constant, 'constant = 0');
                 equal(1, Lambda.count(exp.terms), 'terms size = 1');
@@ -67,7 +68,7 @@ class Expression_test extends mohxa.Mohxa {
             });
 
             it('variable_number', function () {
-                var v = new Variable({ value: 10 });
+                var v = new Variable(10);
                 var exp = new Expression(v, 20);
                 equal(0.0, exp.constant, 'constant = 0');
                 equal(1, Lambda.count(exp.terms), 'terms size = 1');
@@ -75,7 +76,7 @@ class Expression_test extends mohxa.Mohxa {
             });
 
             it('variable_number_number', function () {
-                var v = new Variable({ value: 10 });
+                var v = new Variable(10);
                 var exp = new Expression(v, 20, 2);
                 equal(2.0, exp.constant, 'constant = 2');
                 equal(1, Lambda.count(exp.terms), 'terms size = 1');
@@ -83,7 +84,7 @@ class Expression_test extends mohxa.Mohxa {
             });
 
             it('clone', function () {
-                var v = new Variable({ value: 10 });
+                var v = new Variable(10);
                 var exp = new Expression(v, 20, 2);
                 var clone = exp.clone();
 
@@ -95,7 +96,7 @@ class Expression_test extends mohxa.Mohxa {
             it('isConstant', function () {
                 var e1 = new Expression();
                 var e2 = new Expression(10);
-                var e3 = new Expression(new Variable({ value: 10 }), 20, 2);
+                var e3 = new Expression(new Variable(10), 20, 2);
 
                 equal(true, e1.is_constant, 'e1 is_constant');
                 equal(true, e2.is_constant, 'e2 is_constant');
@@ -103,7 +104,7 @@ class Expression_test extends mohxa.Mohxa {
             });
 
             it('multiplyMe', function () {
-                var v = new Variable({ value: 10 });
+                var v = new Variable(10);
                 var e = new Expression(v, 20, 2).multiply_me(-1);
 
                 equal(e.constant, -2.0, 'constant = -20');
@@ -112,7 +113,7 @@ class Expression_test extends mohxa.Mohxa {
             });
 
             it('times', function () {
-                var v = new Variable({ value: 10 });
+                var v = new Variable(10);
                 var a = new Expression(v, 20, 2);
 
                 // times a number
@@ -137,8 +138,8 @@ class Expression_test extends mohxa.Mohxa {
             });
 
             it('addVariable', function () {
-                var a = new Expression(new Variable({ value: 10 }), 20, 2);
-                var v = new Variable({ value: 20 });
+                var a = new Expression(new Variable(10), 20, 2);
+                var v = new Variable(20);
 
                 // implicit coefficient of 1
                 a.add_variable(v);
@@ -162,8 +163,8 @@ class Expression_test extends mohxa.Mohxa {
             });
 
             it('add_expr_variable', function () {
-                var a = new Expression(new Variable({ value: 10 }), 20, 2);
-                var v = new Variable({ value: 20 });
+                var a = new Expression(new Variable(10), 20, 2);
+                var v = new Variable(20);
 
                 // should work just like addVariable
                 a.add_expr(v, 2);
@@ -172,9 +173,9 @@ class Expression_test extends mohxa.Mohxa {
             });
 
             it('add_expr', function () {
-                var va = new Variable({ value: 10 });
-                var vb = new Variable({ value: 20 });
-                var vc = new Variable({ value: 5 });
+                var va = new Variable(10);
+                var vb = new Variable(20);
+                var vc = new Variable(5);
                 var a = new Expression(va, 20, 2);
 
                 // different variable and implicit coefficient of 1, should make new term
@@ -198,8 +199,8 @@ class Expression_test extends mohxa.Mohxa {
             });
 
             it('plus', function () {
-                var va = new Variable({ value: 10 });
-                var vb = new Variable({ value: 20 });
+                var va = new Variable(10);
+                var vb = new Variable(20);
                 var a = new Expression(va, 20, 2);
                 var b = new Expression(vb, 10, 5);
 
@@ -214,8 +215,8 @@ class Expression_test extends mohxa.Mohxa {
             });
 
             it('minus', function () {
-                var va = new Variable({ value: 10 });
-                var vb = new Variable({ value: 20 });
+                var va = new Variable(10);
+                var vb = new Variable(20);
                 var a = new Expression(va, 20, 2);
                 var b = new Expression(vb, 10, 5);
 
@@ -230,8 +231,8 @@ class Expression_test extends mohxa.Mohxa {
             });
 
             it('divide', function () {
-                var va = new Variable({ value: 10 });
-                var vb = new Variable({ value: 20 });
+                var va = new Variable(10);
+                var vb = new Variable(20);
                 var a = new Expression(va, 20, 2);
 
                 // assert.throws(a.divide.bind(a, 0), c.NonExpression);
@@ -252,8 +253,8 @@ class Expression_test extends mohxa.Mohxa {
             });
 
             it('coefficientFor', function () {
-                var va = new Variable({ value: 10 });
-                var vb = new Variable({ value: 20 });
+                var va = new Variable(10);
+                var vb = new Variable(20);
                 var a = new Expression(va, 20, 2);
 
                 equal(a.coefficient_for(va), 20, 'coefficient_for va = 20');
@@ -261,8 +262,8 @@ class Expression_test extends mohxa.Mohxa {
             });
 
             it('setVariable', function () {
-                var va = new Variable({ value: 10 });
-                var vb = new Variable({ value: 20 });
+                var va = new Variable(10);
+                var vb = new Variable(20);
                 var a = new Expression(va, 20, 2);
 
                 // set existing variable
@@ -283,7 +284,7 @@ class Expression_test extends mohxa.Mohxa {
                 // assert.throws(e.anyPivotableVariable.bind(e), c.InternalError);
                 // t.e(c.InternalError, new Expression(10), 'anyPivotableVariable');
 
-                var va = new Variable({ value: 10 });
+                var va = new Variable(10);
                 var vb = new SlackVariable();
                 var a = new Expression(va, 20, 2);
 
@@ -294,8 +295,8 @@ class Expression_test extends mohxa.Mohxa {
             });
 
             it('substituteOut', function () {
-                var v1 = new Variable({ value: 20 });
-                var v2 = new Variable({ value: 2 });
+                var v1 = new Variable(20);
+                var v2 = new Variable(2);
                 var a = new Expression(v1, 2, 2); // 2*v1 + 2
 
                 // new variable
@@ -314,7 +315,7 @@ class Expression_test extends mohxa.Mohxa {
             });
 
             it('newSubject', function () {
-                var v = new Variable({ value: 10 });
+                var v = new Variable(10);
                 var e = new Expression(v, 2, 5);
 
                 equal(e.new_subject(v), 1 / 2, 'new subject = 1/2');
@@ -324,8 +325,8 @@ class Expression_test extends mohxa.Mohxa {
             });
 
             it('changeSubject', function () {
-                var va = new Variable({ value: 10 });
-                var vb = new Variable({ value: 5 });
+                var va = new Variable(10);
+                var vb = new Variable(5);
                 var e = new Expression(va, 2, 5);
 
                 e.change_subject(vb, va);
@@ -335,7 +336,7 @@ class Expression_test extends mohxa.Mohxa {
             });
 
             it('toString', function () {
-                var v = new Variable({ name: 'v', value: 5 });
+                var v = new Variable('v',5);
 
                 equal(Expression.from_constant(10)+'', '10', '= 10');
                 equal(new Expression(v, 0, 10)+'', '10 + 0*5', '= 10 + 0*5');
@@ -343,12 +344,12 @@ class Expression_test extends mohxa.Mohxa {
                 var e = new Expression(v, 2, 10);
                 equal(e+'', '10 + 2*5', '= 10 + 2*5');
 
-                e.set_variable(new Variable({ name: 'b', value: 2 }), 4);
+                e.set_variable(new Variable('b',2), 4);
                 equal(e+'', '10 + 2*5 + 4*2', '= 10 + 2*5 + 4*2');
             });
 
             it('equals', function () {
-                var v = new Variable({ name: 'v', value: 5 });
+                var v = new Variable('v',5);
 
                 equal(true, new Expression(10).equals(new Expression(10)), 'e(10) = e(10)');
                 equal(false, new Expression(10).equals(new Expression(1)), 'e(10) != e(1)');
@@ -357,8 +358,8 @@ class Expression_test extends mohxa.Mohxa {
             });
 
             it('plus', function () {
-                var x = new Variable({ name: 'x', value: 167 });
-                var y = new Variable({ name: 'y', value: 10 });
+                var x = new Variable('x',167);
+                var y = new Variable('y',10);
 
                 equal(C.plus(2, 3)+'', '5', 'plus(2,3) = 5');
                 equal(C.plus(x, 2)+'', '2 + 1*167', 'plus(x,2) = 2 + 1*167');
@@ -367,8 +368,8 @@ class Expression_test extends mohxa.Mohxa {
             });
 
             it('minus', function () {
-                var x = new Variable({ name: 'x', value: 167 });
-                var y = new Variable({ name: 'y', value: 10 });
+                var x = new Variable('x',167);
+                var y = new Variable('y',10);
 
                 equal(C.minus(2, 3)+'', '-1', 'minus(2, 3) = -1');
                 equal(C.minus(x, 2)+'', '-2 + 1*167', 'minus(x, 2) = -2 + 1*167');
@@ -377,8 +378,8 @@ class Expression_test extends mohxa.Mohxa {
             });
 
             it('times', function () {
-                var x = new Variable({ name: 'x', value: 167 });
-                var y = new Variable({ name: 'y', value: 10 });
+                var x = new Variable('x',167);
+                var y = new Variable('y',10);
 
                 equal(C.times(2, 3)+'', '6', 'times(2, 3) = 6');
                 equal(C.times(x, 2)+'', '2*167', 'times(x, 2) = 2*167');
@@ -387,8 +388,8 @@ class Expression_test extends mohxa.Mohxa {
             });
 
             it('divide', function () {
-                var x = new Variable({ name: 'x', value: 167 });
-                var y = new Variable({ name: 'y', value: 10 });
+                var x = new Variable('x',167);
+                var y = new Variable('y',10);
 
                 equal(C.divide(4, 2)+'', '2', 'divide(4,2) = 2');
                 equal(C.divide(x, 2)+'', '0.5*167', 'divide(x,2) = 0.5*167');

@@ -1,5 +1,5 @@
 
-import Variable;
+import cassowary.Variable;
 
 class Variable_test extends mohxa.Mohxa {
 
@@ -10,14 +10,14 @@ class Variable_test extends mohxa.Mohxa {
         describe('Variable', function(){
             describe('ctor', function(){
                 it('names/maps correctly', function(){
-                    new Variable({name:'x'});
-                    new Variable({name:'y', value:2});
+                    new Variable('x');
+                    new Variable('y', 2);
                     equal(CVariable.map.get('x').value+'', '0', 'x mapped, value 0');
                     equal(CVariable.map.get('y').value+'', '2', 'y mapped, value 2');
                 });
 
                 it('has the correct properties', function(){
-                    var x = new Variable({ name:'x', value:25 });
+                    var x = new Variable('x',25);
 
                     equal(x.value, 25, 'x value = 25');
                     equal(x.val+'', '25', 'valueOf = 25');
@@ -32,12 +32,12 @@ class Variable_test extends mohxa.Mohxa {
         describe('DummyVariable', function(){
             describe('ctor', function(){
                 it('serializes', function(){
-                    var d = new DummyVariable({name:'foo'});
+                    var d = new DummyVariable('foo');
                     equal(d._value+'','dummy', 'valueOf = dummy');
                 });
 
                 it('has the correct properties', function(){
-                    var x = new DummyVariable({name:'x'});
+                    var x = new DummyVariable('x');
 
                     equal(x._value+'','dummy', 'valueOf = dummy');
                     equal(x.is_external, false, 'not is_external');
@@ -51,12 +51,12 @@ class Variable_test extends mohxa.Mohxa {
         describe('ObjectiveVariable', function(){
             describe('ctor', function(){
                 it('serializes', function(){
-                    var o = new ObjectiveVariable({name:'obj'});
+                    var o = new ObjectiveVariable('obj');
                     equal(o.val+'','obj', 'valueOf = obj');
                 });
 
                 it('has the correct properties', function(){
-                    var x = new ObjectiveVariable({name:'x'});
+                    var x = new ObjectiveVariable('x');
 
                     equal(x.val+'','obj', 'valueOf = obj');
                     equal(x.is_external, false, 'not is_external');
@@ -70,7 +70,7 @@ class Variable_test extends mohxa.Mohxa {
         describe('SlackVariable', function(){
             describe('ctor', function(){
                 it('has the correct properties', function(){
-                    var x = new SlackVariable({name:'x'});
+                    var x = new SlackVariable('x');
 
                     equal(x._value+'','slack', 'valueOf = slack');
                     equal(x.is_external, false, 'not is_external');

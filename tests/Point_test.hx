@@ -1,3 +1,5 @@
+import cassowary.Point;
+
 
 class Point_test extends mohxa.Mohxa {
 

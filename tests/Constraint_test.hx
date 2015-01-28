@@ -1,7 +1,10 @@
 
-import Constraint;
-import Expression;
-import Variable;
+import cassowary.Constraint;
+import cassowary.Expression;
+import cassowary.Variable;
+import cassowary.Strength;
+import cassowary.SimplexSolver;
+import cassowary.C;
 
 class Constraint_test extends mohxa.Mohxa {
 
@@ -17,14 +20,14 @@ class Constraint_test extends mohxa.Mohxa {
             });
 
             it('can create expressions Variable instances', function () {
-                var x = new Variable({ value: 167 });
-                var y = new Variable({ value: 2 });
+                var x = new Variable(167);
+                var y = new Variable(2);
                 var cly = new Expression(y);
                 cly.add_expr(x);
             });
 
             it('can create equations from variables and expressions', function () {
-                var x = new Variable({ name: 'x', value: 167 });
+                var x = new Variable('x', 167);
                 var cly = new Expression(2);
                 var eq = new Equation(x, cly);
                 equal(true, eq.expression.equals(cly.minusv(x)) );
@@ -32,10 +35,10 @@ class Constraint_test extends mohxa.Mohxa {
 
             it('should handle strengths correctly', function () {
                 var solver = new SimplexSolver();
-                var x = new Variable({ name: 'x', value: 10 });
-                var y = new Variable({ name: 'y', value: 20 });
-                var z = new Variable({ name: 'z', value: 1 });
-                var w = new Variable({ name: 'w', value: 1 });
+                var x = new Variable('x',10);
+                var y = new Variable('y',20);
+                var z = new Variable('z',1);
+                var w = new Variable('w',1);
 
                 // Default weights.
                 var e0 = new Equation(x, y);
@@ -61,14 +64,14 @@ class Constraint_test extends mohxa.Mohxa {
             });
 
             it('can use numbers in place of variables', function () {
-                var v = new Variable({ name: 'v', value: 22 });
+                var v = new Variable('v',22);
                 var eq = new Equation(v, 5);
                 equal(true, eq.expression.equals(C.minus(5, v)), 'eq = 5 - v');
             });
 
             it('can use equations in place of variables', function () {
                 var e = new Expression(10);
-                var v = new Variable({ name: 'v', value: 22 });
+                var v = new Variable('v',22);
                 var eq = new Equation(e, v);
 
                 equal(true,eq.expression.equals(C.minus(10, v)), 'eq = 10 - v');
@@ -77,7 +80,7 @@ class Constraint_test extends mohxa.Mohxa {
             it('works with nested expressions', function () {
 
                 var e1 = new Expression(10);
-                var e2 = new Expression(new Variable({ name: 'z', value: 10 }), 2, 4);
+                var e2 = new Expression(new Variable('z', 10), 2, 4);
                 var eq = new Equation(e1, e2);
                 equal(true,eq.expression.equals(e1.minus(e2)), 'eq = e1 - e2');
             });
@@ -89,8 +92,8 @@ class Constraint_test extends mohxa.Mohxa {
             });
 
             it('handles inequality constructors with operator arguments', function () {
-                var v1 = new Variable({ name: 'v1', value: 10 });
-                var v2 = new Variable({ name: 'v2', value: 5 });
+                var v1 = new Variable('v1',10);
+                var v2 = new Variable('v2',5);
                 var ieq = new Inequality(v1, Op.GEQ, v2);
 
                 equal(true,ieq.expression.equals(C.minus(v1, v2)), 'ieq = v1 - v2');
@@ -100,7 +103,7 @@ class Constraint_test extends mohxa.Mohxa {
             });
 
             it('handles expressions with variables, operators, and numbers', function () {
-                var v = new Variable({ name: 'v', value: 10 });
+                var v = new Variable('v',10);
                 var ieq = new Inequality(v, Op.GEQ, 5);
 
                 equal(true,ieq.expression.equals(C.minus(v, 5)), 'ieq = v - 5');
@@ -111,7 +114,7 @@ class Constraint_test extends mohxa.Mohxa {
 
             it('handles inequalities with reused variables', function () {
                 var e1 = new Expression(10);
-                var e2 = new Expression(new Variable({ name: 'c', value: 10 }), 2, 4);
+                var e2 = new Expression(new Variable('c',10), 2, 4);
                 var ieq = new Inequality(e1, Op.GEQ, e2);
 
                 equal(true,ieq.expression.equals(e1.minus(e2)), 'ieq = e1 - e2');
@@ -121,8 +124,8 @@ class Constraint_test extends mohxa.Mohxa {
             });
 
             it('handles constructors with variable/operator/expression args', function () {
-                var v = new Variable({ name: 'v', value: 10 });
-                var e = new Expression(new Variable({ name: 'x', value: 5 }), 2, 4);
+                var v = new Variable('v',10);
+                var e = new Expression(new Variable('x',5), 2, 4);
                 var ieq = new Inequality(v, Op.GEQ, e);
 
                 equal(true,ieq.expression.equals(C.minus(v, e)), 'ieq = v - e');
@@ -132,8 +135,8 @@ class Constraint_test extends mohxa.Mohxa {
             });
 
             it('handles constructors with expression/operator/variable args', function () {
-                var v = new Variable({ name: 'v', value: 10 });
-                var e = new Expression(new Variable({ name: 'x', value: 5 }), 2, 4);
+                var v = new Variable('v',10);
+                var e = new Expression(new Variable('x',5), 2, 4);
                 var ieq = new Inequality(e, Op.GEQ, v);
 
                 equal(true,ieq.expression.equals(e.minusv(v)), 'ieq = e - v');
@@ -143,7 +146,7 @@ class Constraint_test extends mohxa.Mohxa {
             });
 
             it('StayConstraint constant equals stay variable value', function () {
-              var stayVariable = new Variable({name:"stay", value:10});
+              var stayVariable = new Variable("stay",10);
               var stayConstraint = new StayConstraint(stayVariable,
                     // Strength.weak,
                     Strength.required,

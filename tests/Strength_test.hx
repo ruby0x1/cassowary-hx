@@ -1,6 +1,9 @@
 
-import Strength;
-import Constraint;
+import cassowary.Strength;
+import cassowary.Constraint;
+import cassowary.SimplexSolver;
+import cassowary.Variable;
+import cassowary.C;
 
 class Strength_test extends mohxa.Mohxa {
 
@@ -42,9 +45,9 @@ class Strength_test extends mohxa.Mohxa {
                     // z = y (strong)
                     // z == 20
 
-                    var x = new Variable({ name: 'x' });
-                    var y = new Variable({ name: 'y' });
-                    var z = new Variable({ name: 'z' });
+                    var x = new Variable('x');
+                    var y = new Variable('y');
+                    var z = new Variable('z');
 
                     s.add_constraint(new Equation(z, x, Strength.weak))
                     .add_constraint(new Equation(z, y, Strength.strong));
@@ -67,9 +70,9 @@ class Strength_test extends mohxa.Mohxa {
             describe('multiple stays/edits', function () {
                 var s = new SimplexSolver();
 
-                var x = new Variable({ name: 'x' });
-                var y = new Variable({ name: 'y' });
-                var z = new Variable({ name: 'z' });
+                var x = new Variable('x');
+                var y = new Variable('y');
+                var z = new Variable('z');
 
                 s.add_constraint(new Equation(z, x, Strength.weak))
                 .add_constraint(new Equation(z, y, Strength.strong));

@@ -1,5 +1,5 @@
 
-import Tableau;
+import cassowary.Tableau;
 
 class Tableau_test extends mohxa.Mohxa {
 

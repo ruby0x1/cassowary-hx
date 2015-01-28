@@ -1,7 +1,10 @@
 
-import Constraint;
-import Variable;
-import Expression;
+import cassowary.Constraint;
+import cassowary.Variable;
+import cassowary.Expression;
+import cassowary.SimplexSolver;
+import cassowary.Strength;
+import cassowary.C;
 
 class EndToEnd_test extends mohxa.Mohxa {
 
@@ -13,8 +16,8 @@ class EndToEnd_test extends mohxa.Mohxa {
             it('simple1', function(){
                 var solver = new SimplexSolver();
 
-                var x = new Variable({ value: 167 });
-                var y = new Variable({ value: 2 });
+                var x = new Variable(167);
+                var y = new Variable(2);
                 var eq = new Equation(x, new Expression(y));
 
                 solver.add_constraint(eq);
@@ -24,8 +27,8 @@ class EndToEnd_test extends mohxa.Mohxa {
             });
 
             it('justStay1', function () {
-                var x = new Variable({ value: 5 });
-                var y = new Variable({ value: 10 });
+                var x = new Variable(5);
+                var y = new Variable(10);
                 var solver = new SimplexSolver();
                     solver.add_stay(x);
                     solver.add_stay(y);
@@ -39,7 +42,7 @@ class EndToEnd_test extends mohxa.Mohxa {
                 // x >= 100
                 var solver = new SimplexSolver();
 
-                var x = new Variable({ value: 10 });
+                var x = new Variable(10);
                 var ieq = new Inequality(x, Op.GEQ, 100);
                 solver.add_constraint(ieq);
                 equal(x.value, 100, 'x = 100');
@@ -49,7 +52,7 @@ class EndToEnd_test extends mohxa.Mohxa {
                 // 100 == var
                 var solver = new SimplexSolver();
 
-                var x = new Variable({ value: 10 });
+                var x = new Variable(10);
                 var eq = new Equation(100, x);
                 solver.add_constraint(eq);
                 equal(x.value, 100, 'x = 100');
@@ -59,7 +62,7 @@ class EndToEnd_test extends mohxa.Mohxa {
                 // x >= 100
                 var solver = new SimplexSolver();
 
-                var x = new Variable({ value: 10 });
+                var x = new Variable(10);
                 var ieq = new Inequality(100, Op.LEQ, x);
                 solver.add_constraint(ieq);
 
@@ -72,9 +75,9 @@ class EndToEnd_test extends mohxa.Mohxa {
                 var solver = new SimplexSolver();
 
                 // x = 10
-                var x = new Variable({ value: 10 });
+                var x = new Variable(10);
                 // width = 10
-                var width = new Variable({ value: 10 });
+                var width = new Variable(10);
                 // right = x + width
                 var right = new Expression(x).plusv(width);
                 // right >= 100
@@ -91,8 +94,8 @@ class EndToEnd_test extends mohxa.Mohxa {
                 // 100 <= right
                 var solver = new SimplexSolver();
 
-                var x = new Variable({ value: 10 });
-                var width = new Variable({ value: 10 });
+                var x = new Variable(10);
+                var width = new Variable(10);
                 var right = new Expression(x).plusv(width);
                 var ieq = new Inequality(100, Op.LEQ, right);
 
@@ -108,9 +111,9 @@ class EndToEnd_test extends mohxa.Mohxa {
                 // right >= rightMin
                 var solver = new SimplexSolver();
 
-                var x = new Variable({ value: 10 });
-                var width = new Variable({ value: 10 });
-                var rightMin = new Variable({ value: 100 });
+                var x = new Variable(10);
+                var width = new Variable(10);
+                var rightMin = new Variable(100);
                 var right = new Expression(x).plusv(width);
                 var eq = new Equation(right, rightMin);
 
@@ -127,9 +130,9 @@ class EndToEnd_test extends mohxa.Mohxa {
                 // right >= rightMin
                 var solver = new SimplexSolver();
 
-                var x = new Variable({ value: 10 });
-                var width = new Variable({ value: 10 });
-                var rightMin = new Variable({ value: 100 });
+                var x = new Variable(10);
+                var width = new Variable(10);
+                var rightMin = new Variable(100);
                 var right = new Expression(x).plusv(width);
                 var ieq = new Inequality(right, Op.GEQ, rightMin);
 
@@ -146,9 +149,9 @@ class EndToEnd_test extends mohxa.Mohxa {
                 // right >= rightMin
                 var solver = new SimplexSolver();
 
-                var x = new Variable({ value: 10 });
-                var width = new Variable({ value: 10 });
-                var rightMin = new Variable({ value: 100 });
+                var x = new Variable(10);
+                var width = new Variable(10);
+                var rightMin = new Variable(100);
                 var right = new Expression(x).plusv(width);
                 var ieq = new Inequality(rightMin, Op.LEQ, right);
                 solver.add_stay(width)
@@ -164,11 +167,11 @@ class EndToEnd_test extends mohxa.Mohxa {
                 // right >= rightMin
                 var solver = new SimplexSolver();
 
-                var x1 = new Variable({ value: 10 });
-                var width1 = new Variable({ value: 10 });
+                var x1 = new Variable(10);
+                var width1 = new Variable(10);
                 var right1 = new Expression(x1).plusv(width1);
-                var x2 = new Variable({ value: 100 });
-                var width2 = new Variable({ value: 10 });
+                var x2 = new Variable(100);
+                var width2 = new Variable(10);
                 var right2 = new Expression(x2).plusv(width2);
 
                 var eq = new Equation(right1, right2);
@@ -189,11 +192,11 @@ class EndToEnd_test extends mohxa.Mohxa {
                 // right >= rightMin
                 var solver = new SimplexSolver();
 
-                var x1 = new Variable({ value: 10 });
-                var width1 = new Variable({ value: 10 });
+                var x1 = new Variable(10);
+                var width1 = new Variable(10);
                 var right1 = new Expression(x1).plusv(width1);
-                var x2 = new Variable({ value: 100 });
-                var width2 = new Variable({ value: 10 });
+                var x2 = new Variable(100);
+                var width2 = new Variable(10);
                 var right2 = new Expression(x2).plusv(width2);
 
                 var ieq = new Inequality(right1, Op.GEQ, right2);
@@ -211,11 +214,11 @@ class EndToEnd_test extends mohxa.Mohxa {
                 // right >= rightMin
                 var solver = new SimplexSolver();
 
-                var x1 = new Variable({ value: 10 });
-                var width1 = new Variable({ value: 10 });
+                var x1 = new Variable(10);
+                var width1 = new Variable(10);
                 var right1 = new Expression(x1).plusv(width1);
-                var x2 = new Variable({ value: 100 });
-                var width2 = new Variable({ value: 10 });
+                var x2 = new Variable(100);
+                var width2 = new Variable(10);
                 var right2 = new Expression(x2).plusv(width2);
                 var ieq = new Inequality(right2, Op.LEQ, right1);
 
@@ -229,7 +232,7 @@ class EndToEnd_test extends mohxa.Mohxa {
 
             it('addDelete1', function () {
                 var solver = new SimplexSolver();
-                var x = new Variable({ name: 'x' });
+                var x = new Variable('x');
                 var cbl = new Equation(x, 100, Strength.weak);
                 solver.add_constraint(cbl);
 
@@ -259,8 +262,8 @@ class EndToEnd_test extends mohxa.Mohxa {
 
             it('addDelete2', function () {
                 var solver = new SimplexSolver();
-                var x = new Variable({ name: 'x' });
-                var y = new Variable({ name: 'y' });
+                var x = new Variable('x');
+                var y = new Variable('y');
 
                 solver.add_constraint(new Equation(x, 100, Strength.weak))
                 .add_constraint(new Equation(y, 120, Strength.strong));
@@ -291,8 +294,8 @@ class EndToEnd_test extends mohxa.Mohxa {
 
             it('casso1', function () {
                 var solver = new SimplexSolver();
-                var x = new Variable({ name: 'x' });
-                var y = new Variable({ name: 'y' });
+                var x = new Variable('x');
+                var y = new Variable('y');
 
                 solver.add_constraint(new Inequality(x, Op.LEQ, y))
                       .add_constraint(new Equation(y, C.plus(x, 3)))
@@ -310,10 +313,10 @@ class EndToEnd_test extends mohxa.Mohxa {
                 // This test stresses the edit session stack. begin_edit() starts a new
                 // "edit variable group" and "end_edit" closes it, leaving only the
                 // previously opened edit variables still active.
-                var x = new Variable({ name: 'x' });
-                var y = new Variable({ name: 'y' });
-                var w = new Variable({ name: 'w' });
-                var h = new Variable({ name: 'h' });
+                var x = new Variable('x');
+                var y = new Variable('y');
+                var w = new Variable('w');
+                var h = new Variable('h');
                 var solver = new SimplexSolver();
                 // Add some stays and start an editing session
                 solver.add_stay(x)
@@ -350,10 +353,10 @@ class EndToEnd_test extends mohxa.Mohxa {
             });
 
             it('multiedit2', function () {
-                var x = new Variable({ name: 'x' });
-                var y = new Variable({ name: 'y' });
-                var w = new Variable({ name: 'w' });
-                var h = new Variable({ name: 'h' });
+                var x = new Variable('x');
+                var y = new Variable('y');
+                var w = new Variable('w');
+                var h = new Variable('h');
                 var solver = new SimplexSolver();
                 solver.add_stay(x)
                       .add_stay(y)
@@ -412,24 +415,18 @@ class EndToEnd_test extends mohxa.Mohxa {
                 };
 
                 var v = {
-                    width: new Variable({ name: 'width' }),
-                    height: new Variable({ name: 'height' }),
-                    top: new Variable({ name: 'top' }),
-                    bottom: new Variable({ name: 'bottom' }),
-                    left: new Variable({ name: 'left' }),
-                    right: new Variable({ name: 'right' }),
+                    width: new Variable('width'),
+                    height: new Variable('height'),
+                    top: new Variable('top'),
+                    bottom: new Variable('bottom'),
+                    left: new Variable('left'),
+                    right: new Variable('right'),
                 };
 
                 var solver = new SimplexSolver();
 
-                var iw = new Variable({
-                    name: 'window_innerWidth',
-                    value: rand(MAX, MIN)
-                });
-                var ih = new Variable({
-                    name: 'window_innerHeight',
-                    value: rand(MAX, MIN)
-                });
+                var iw = new Variable('window_innerWidth',rand(MAX, MIN));
+                var ih = new Variable('window_innerHeight', rand(MAX, MIN));
                 var iwStay = new StayConstraint(iw);
                 var ihStay = new StayConstraint(ih);
 
@@ -488,9 +485,9 @@ class EndToEnd_test extends mohxa.Mohxa {
                 var medium = Strength.medium;
                 var strong = Strength.strong;
 
-                var x = new Variable({ name: 'x', value: 100 });
-                var y = new Variable({ name: 'y', value: 200 });
-                var z = new Variable({ name: 'z', value: 50 });
+                var x = new Variable('x',100);
+                var y = new Variable('y',200);
+                var z = new Variable('z',50);
 
                 equal(x.value, 100, 'x = 100');
                 equal(y.value, 200, 'y = 200');
