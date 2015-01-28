@@ -72,43 +72,25 @@ class SimplexSolver extends Tableau {
     public function add_constraint(cn:AbstractConstraint) {
         cassowary.Log._debug('* addConstraint: ' + cn);
 
-        var start = Luxe.time;
-        var mark = Luxe.time;
-
-
             //output into these
         var _eplus_eminus = [];
         var _prev_edit_const = [];
-        // Sys.println('  add_con init ${mark-start}');
-        mark = Luxe.time;
-
             //from this
         var expr = new_expression( cn, _eplus_eminus, _prev_edit_const);
-        // Sys.println('  add_con newexpr ${mark-start}');
-        mark = Luxe.time;
-
         var prev_edit_const:Float = _prev_edit_const[0];
 
         if(!try_adding_directly(expr)) {
             add_with_artificial_variable(expr);
         }
-        // Sys.println('  add_con trydirect ${mark-start}');
-        mark = Luxe.time;
 
         needs_solving = true;
         if(cn.is_edit_constraint) {
             add_edit_constraint(cn , _eplus_eminus, prev_edit_const);
         }
 
-        // Sys.println('  add_con add_edit_con ${mark-start}');
-        mark = Luxe.time;
-
         if(auto_solve) {
             optimize(objective);
-            // Sys.println('  add_con auto_solve optimize ${mark-start}');
-            mark = Luxe.time;
             set_external_variables();
-            // Sys.println('  add_con auto_solve external_vars ${mark-start}');
         }
 
         return this;
