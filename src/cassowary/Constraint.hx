@@ -29,7 +29,7 @@ class AbstractConstraint {
 
         hashcode = C.inc();
             //:note: potential side effect of weight || 1 in js?
-        if(_weight == 0.0) _weight = 1.0; 
+        // if(_weight == 0.0) _weight = 1.0; 
         weight = _weight;
         strength = Strength.required;
         if(_strength != null) {
