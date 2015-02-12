@@ -29,8 +29,9 @@ class OrderedMap<K, V> implements IMap<K, V> {
        map = _map;
     }
 
-    public inline function set(key:K, value:V) {
-        if(_keys.indexOf(key) == -1) _keys.push(key);
+    // inline
+    public function set(key:K, value:V) {
+        if (!map.exists(key)) _keys.push(key);
         map[key] = value;
     }
 
@@ -44,6 +45,6 @@ class OrderedMap<K, V> implements IMap<K, V> {
     public inline function remove(key)         return map.remove(key) && _keys.remove(key);
     public inline function exists(key)         return map.exists(key);
     public inline function get(key)            return map.get(key);
-    public inline function keys()       return _keys.iterator();
+    public inline function keys()              return _keys.iterator();
 
 } //OrderedMap

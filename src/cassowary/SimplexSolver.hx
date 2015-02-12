@@ -43,6 +43,10 @@ class SimplexSolver extends Tableau {
         rows.set(objective, Expression.empty());
         edit_var_stack = [0];
         cassowary.Log._verbose("objective expr == " + rows.get(objective));
+
+        //:todo:
+        CVariable.map = null;
+        CVariable.map = new Map();
     }
 
     public function add(list:Array<Constraint>) {
@@ -341,7 +345,7 @@ class SimplexSolver extends Tableau {
         return this;
     }
 
-    public function set_edited_value(v:Variable, n:Float) {
+    public function set_edited_value(v:Variable, n:Float, ?strength:Strength, ?priority:Float) {
 
         if( !( columns_has_key(v)||(rows.get(v) != null)  )) {
             v.value = n;
@@ -349,11 +353,11 @@ class SimplexSolver extends Tableau {
         }
 
         if(!C.approx(n, v.value)) {
-            add_edit_var(v);
+            add_edit_var(v, strength, priority);
             begin_edit();
 
             try{
-                suggest_value(v , n);
+                suggest_value(v, n);
             } catch(e:Dynamic) {
                 throw "set_edited_value: error " + e;
             }
@@ -788,7 +792,7 @@ class SimplexSolver extends Tableau {
             var expr = rows.get(v);
             if(v.value != expr.constant) {
                 v.value = expr.constant;
-                changed.push({name:v.name,c:expr.constant});
+                _changed.push({name:v.name,c:expr.constant});
             }
         }
 
