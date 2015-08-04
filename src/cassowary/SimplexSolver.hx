@@ -33,11 +33,11 @@ class SimplexSolver extends Tableau {
         stay_plus_error_vars = [];
         stay_minus_error_vars = [];
         changed = [];
-        error_vars = new OrderedMap( new Map() );
-        marker_vars = new OrderedMap(  new Map() );
+        error_vars = new OrderedMap<AbstractConstraint, Array<AbstractVariable>>( new Map() );
+        marker_vars = new OrderedMap<AbstractConstraint, AbstractVariable>(  new Map() );
 
         objective = new ObjectiveVariable("Z");
-        edit_var_map = new OrderedMap( new Map() );
+        edit_var_map = new OrderedMap<AbstractVariable, EditInfo>( new Map() );
         edit_var_list = [];
 
         rows.set(objective, Expression.empty());

@@ -12,7 +12,7 @@ class Expression {
 
     public var constant : Float = 0.0;
     public function new( ?cvar:Dynamic, ?_value:Float=1.0, ?_constant:Float=0.0) {
-        terms = new OrderedMap( new Map() );
+        terms = new OrderedMap<AbstractVariable, Float>( new Map<AbstractVariable, Float>() );
         constant = _constant;
 
         if(cvar != null) {
@@ -30,14 +30,14 @@ class Expression {
         }
     }
 
-    public function init_from_hash(_constant:Float, t:IMap<AbstractVariable, Float>) {
+    public function init_from_hash(_constant:Float, t:OrderedMap<AbstractVariable, Float>) {
         cassowary.Log._verbose("*******************************");
         cassowary.Log._verbose("clone c.initializeFromHash");
         cassowary.Log._verbose("*******************************");
 
         terms = null;
         constant = _constant;
-        terms = new OrderedMap( new Map<AbstractVariable, Float>() );
+        terms = new OrderedMap<AbstractVariable, Float>( new Map<AbstractVariable, Float>() );
         for(v in t.keys()) terms.set(v, t.get(v));
         return this;
     }
@@ -210,7 +210,7 @@ class Expression {
         return reciprocal;
     }
 
-    public function terms_equals(other:IMap<AbstractVariable, Float>) {
+    public function terms_equals(other:OrderedMap<AbstractVariable, Float>) {
         if(terms == other) return true;
         if( Lambda.count(terms) != Lambda.count(other)) return false;
         for(clv in terms.keys()) {
