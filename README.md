@@ -3,6 +3,10 @@ cassowary.hx
 
 A direct Haxe port of the cassowary.js implementation of the Cassowary constraint solving algorithm. The port includes minor changes to the js born API to deal with the changes to a strong typed language. The port also includes and passes all the original js version test cases.
 
+**Join the Cassowary community**
+
+http://overconstrained.io/
+
 **Important**
 
 - This code was a direct port of [cassowary.js](https://github.com/slightlyoff/cassowary.js/) 
