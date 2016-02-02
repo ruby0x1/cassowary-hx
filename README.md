@@ -10,3 +10,6 @@ cassowary.hx
 While the port is complete in a sense,    
 I have moved on to a new port and implementation and don't consider this port ideal.
 
+---
+
+- Cassowary.js is licensed as Apache 2.0
