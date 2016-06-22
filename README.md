@@ -1,11 +1,9 @@
 cassowary.hx
 ============
 
+[![Slack Status](https://overconstrained-slack.herokuapp.com/badge.svg)](https://overconstrained-slack.herokuapp.com)
+
 A direct Haxe port of the cassowary.js implementation of the Cassowary constraint solving algorithm. The port includes minor changes to the js born API to deal with the changes to a strong typed language. The port also includes and passes all the original js version test cases.
-
-**Join the Cassowary community**
-
-http://overconstrained.io/
 
 **Important**
 
@@ -21,3 +19,7 @@ While the port is complete, I have since moved on to a smaller, cleaner, stronge
 
 - This code is licensed as MIT
 - Cassowary.js is licensed as Apache 2.0
+
+ **Community**
+ 
+Curious about similar projects? Head over to [overconstrained.io](http://overconstrained.io) and [join us](https://overconstrained-slack.herokuapp.com/) on slack.
