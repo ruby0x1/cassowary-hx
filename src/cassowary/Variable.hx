@@ -49,7 +49,7 @@ class AbstractVariable {
 
 } //AbstractVariable
 
-@:forward(prefix, name, value, val, is_dummy, is_external, is_pivotable, is_restricted, _value, _ff)
+@:forward()
 abstract Variable(CVariable) from CVariable to CVariable {
 
     public inline function new(
@@ -62,7 +62,7 @@ abstract Variable(CVariable) from CVariable to CVariable {
     }
 
     @:from
-    static function fromFloat(f:Float) {
+    static function fromFloat(f:Float) : Variable {
         return new CVariable(f,true);
     }
 
